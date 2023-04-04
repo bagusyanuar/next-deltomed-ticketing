@@ -11,6 +11,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --primary-color: #7a9f3f;
 
   --primary-glow: conic-gradient(
     from 180deg at 50% 50%,
@@ -53,8 +54,9 @@
 
 html,
 body {
- 
+  font-family: 'Quicksand', sans-serif;
 }
 
-body {
+.bg-primary {
+  background-color: var(--primary-color);
 }
