@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Image from 'next/image'
+import Router from 'next/router'
+
 
 class Login extends Component {
 
@@ -14,7 +16,15 @@ class Login extends Component {
   onHandleChange = (e) => {
     let id = e.target.id;
     let value = e.target.value;
+    this.setState({
+      [e.target.id]: e.target.value
+    })
     console.log(id, value);
+  }
+
+  handleSubmit = () => {
+    console.log(this.state.username);
+    Router.push("/dashboard");
   }
   render() {
     return (
@@ -27,9 +37,15 @@ class Login extends Component {
           <div id='form'>
             <label className="relative text-gray-400 focus-within:text-gray-600 block mb-2">
               <span className="material-symbols-outlined pointer-events-none w-4 h-4 absolute top-1.5 left-3 text-sm">
-                mail
+                person
               </span>
-              <input type="email" name="email" id="email" placeholder="email" className="text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block pl-8 focus:outline-none focus:border-slate-500" />
+              <input
+                onChange={this.onHandleChange}
+                type="text"
+                name="username"
+                id="username"
+                placeholder="username"
+                className="text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block pl-8 focus:outline-none focus:border-slate-500" />
             </label>
             <label className="relative text-gray-400 focus-within:text-gray-600 block mb-2">
               <span className="material-symbols-outlined pointer-events-none w-4 h-4 absolute top-1.5 left-3 text-sm">
@@ -37,14 +53,17 @@ class Login extends Component {
               </span>
               <input
                 onChange={this.onHandleChange}
-                type="password" 
-                name="password" 
-                id="password" 
-                placeholder="password" 
+                type="password"
+                name="password"
+                id="password"
+                placeholder="password"
                 className="text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block pl-8 focus:outline-none focus:border-slate-500" />
             </label>
             <div className='text-end'>
-              <button type='submit' className='text-sm w-1/3 bg-primary rounded-md py-1 text-white'>Login</button>
+              <button
+                onClick={this.handleSubmit}
+                type='button'
+                className='text-sm w-1/3 bg-primary rounded-md py-1 text-white'>Login</button>
             </div>
 
           </div>
