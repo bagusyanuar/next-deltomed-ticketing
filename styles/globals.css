@@ -60,3 +60,13 @@ body {
 .bg-primary {
   background-color: var(--primary-color);
 }
+
+.sidebar-item {
+  --tw-text-opacity: 1;
+  color: rgb(71 85 105 / var(--tw-text-opacity));
+  height: 40px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  letter-spacing: 0.025em;
+}

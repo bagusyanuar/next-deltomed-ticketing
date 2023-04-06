@@ -9,9 +9,10 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <>
+            <div className='flex'>
                 <Sidebar/>
-            </>
+                <div className='grow bg-primary'></div>
+            </div>
         )
     }
 }
