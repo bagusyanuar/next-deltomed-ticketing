@@ -4,7 +4,7 @@ import SidebarItem from './sidebar-item'
 
 function Sidebar(props) {
     return (
-        <div className='flex flex-col h-screen w-[300px] border-r border-slate-200 px-5 py-5'>
+        <div className='flex flex-col h-screen w-[280px] border-r border-slate-200 px-5 py-5'>
             <div className='flex items-center mt-3 mb-10'>
                 <Image src="/assets/logo.png" width={30} height={10} alt="logo" />
                 <p className='font-bold ms-2'>PT.Deltomed</p>
@@ -16,7 +16,7 @@ function Sidebar(props) {
                 Master
             </div>
             <ul>
-                <SidebarItem icon="group_work" title="Divisi" />
+                <SidebarItem icon="group_work" title="Divisi" link="division" />
                 <SidebarItem icon="location_searching" title="Lokasi" />
                 <SidebarItem icon="account_circle" title="Pengguna" />
             </ul>
