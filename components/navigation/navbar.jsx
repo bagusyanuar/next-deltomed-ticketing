@@ -1,24 +1,48 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
-function Navbar() {
+function useOuterClick(callback) {
+    const callbackRef = useRef();
+    const innerRef = useRef();
+
+    useEffect(() => { callbackRef.current = callback; });
+
+    useEffect(() => {
+        document.addEventListener("click", handleClick);
+        return () => document.removeEventListener("click", handleClick);
+        function handleClick(e) {
+            if (innerRef.current && callbackRef.current &&
+                !innerRef.current.contains(e.target)
+            ) callbackRef.current(e);
+        }
+    }, []);
+
+    return innerRef;
+}
+function Navbar({ title }) {
     const [isOpen, setOpen] = useState(false)
+    const innerRef = useOuterClick(e => {
+        setOpen(false)
+    });
 
     const toggleOpen = () => {
         setOpen(current => !current);
     }
+
     return (
         <div className='w-full h-16 flex px-8 items-center'>
-            <div className='grow'></div>
+            <div className='grow items-center'>
+                <p className='font-bold text-3xl'>{title}</p>
+            </div>
             <div>
                 <div className='relative inline-block text-left'>
                     <div className='flex items-center'>
                         <span class="material-symbols-outlined text-slate-600 me-3">
                             notifications
                         </span>
-                        <button onClick={toggleOpen} type="button" className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-slate-600" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                        <button ref={innerRef} onClick={toggleOpen} type="button" className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-slate-600" id="menu-button" aria-expanded="true" aria-haspopup="true">
                             Administrator
                             <svg className="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                             </svg>
                         </button>
                     </div>
@@ -35,6 +59,10 @@ function Navbar() {
             </div>
         </div>
     )
+}
+
+Navbar.defaultProps = {
+    title: 'Menu',
 }
 
 export default Navbar

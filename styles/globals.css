@@ -12,6 +12,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --primary-color: #7a9f3f;
+  --primary-color-shade: #3d5020;
   --back-color: #eff1f3;
 
   --primary-glow: conic-gradient(
@@ -60,6 +61,10 @@ body {
 
 .bg-primary {
   background-color: var(--primary-color);
+}
+
+.bg-primary-shade {
+  background-color: var(--primary-color-shade);
 }
 
 .bg-base {
