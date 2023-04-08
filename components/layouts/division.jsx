@@ -23,7 +23,7 @@ export class Division extends Component {
         })
     }
 
-    handleCloseModal = (status) => {
+    handleCloseModal = () => {
         this.setState({
             modalOpen: false
         })
@@ -141,7 +141,33 @@ export class Division extends Component {
                     </div>
                 </div>
                 <Modal isOpen={this.state.modalOpen} onClose={this.handleCloseModal}>
-                    <Textfield id='username' onChange={this.handleChange} />
+                    <div className='flex w-full content-between items-center mb-2'>
+                        <span className='grow text-sm text-slate-600 text-left'>Tambah Divisi</span>
+                        <button onClick={this.handleCloseModal}>
+                            <span className="material-symbols-outlined text-sm text-slate-600">
+                                close
+                            </span>
+                        </button>
+                    </div>
+                    <div className='border-b border-slate-300 mb-3'>
+                    </div>
+                    <Textfield id='name' placeholder='name' onChange={this.handleChange} />
+                    <div className="text-end mt-3">
+                        <div>
+                            <button
+                                onClick={this.handleAddButton}
+                                type='button'
+                                className='text-end flex items-center text-sm bg-green-500 rounded-md py-1 px-4 text-white hover:bg-green-600 transition-colors ease-in duration-200'>
+                                <span className="material-symbols-outlined me-1">
+                                    check
+                                </span>
+                                Simpan
+                            </button>
+                        </div>
+
+                        {/* <button onClick={this.handleCloseModal} type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button> */}
+                        {/* <button type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> */}
+                    </div>
                 </Modal>
             </div>
         )

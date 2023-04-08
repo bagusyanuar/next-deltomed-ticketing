@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-function Textfield({ id, onChange }) {
+function Textfield({ id, onChange, placeholder }) {
 
     const onHandleChange = (e) => {
         let value = e.target.value;
@@ -11,7 +11,7 @@ function Textfield({ id, onChange }) {
         <input
             id={id}
             onChange={onHandleChange}
-            placeholder='textfield'
+            placeholder={placeholder}
             type="text"
             className='text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block focus:outline-none focus:border-slate-500' />
     )
@@ -19,7 +19,8 @@ function Textfield({ id, onChange }) {
 
 Textfield.propTypes = {
     onChange: PropTypes.func.isRequired,
-    id: PropTypes.string
+    id: PropTypes.string,
+    placeholder: PropTypes.string
 }
 
 export default Textfield

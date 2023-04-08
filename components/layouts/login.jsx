@@ -52,12 +52,13 @@ class Login extends Component {
                 lock
               </span>
               <input
+                disabled={true}
                 onChange={this.onHandleChange}
                 type="password"
                 name="password"
                 id="password"
                 placeholder="password"
-                className="text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block pl-8 focus:outline-none focus:border-slate-500" />
+                className="disabled:bg-slate-200 text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block pl-8 focus:outline-none focus:border-slate-500" />
             </label>
             <div className='text-end'>
               <button

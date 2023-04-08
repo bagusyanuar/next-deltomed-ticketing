@@ -79,3 +79,19 @@ body {
   cursor: pointer;
   letter-spacing: 0.025em;
 }
+
+.modal-show {
+  position: relative;
+  top: -100px;
+  animation: move-down 2s;
+}
+
+.modal-hide {
+  position: relative;
+}
+
+@keyframes move-down {
+    100% {
+      transform: translateX(0px) translateY(0px);
+    }
+}
