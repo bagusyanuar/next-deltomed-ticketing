@@ -1,8 +1,33 @@
 import React, { Component } from 'react'
 import Sidebar from '../navigation/sidebar';
 import Navbar from '../navigation/navbar';
+import Textfield from '../forms/textfield'
+import Modal from '../modal/modal'
 
 export class Division extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            modalOpen: false
+        }
+    }
+
+    handleChange = (e, value) => {
+        console.log(value, e.target.id);
+    }
+
+    handleAddButton = (e) => {
+        this.setState({
+            modalOpen: true
+        })
+    }
+
+    handleCloseModal = (status) => {
+        this.setState({
+            modalOpen: false
+        })
+    }
     render() {
         return (
             <div className='flex'>
@@ -14,6 +39,7 @@ export class Division extends Component {
                             <div className='flex items-center'>
                                 <p className='grow font-bold text-sm text-slate-600'>Data Divisi</p>
                                 <button
+                                    onClick={this.handleAddButton}
                                     type='button'
                                     className='flex items-center text-sm bg-green-500 rounded-md py-2 px-6 text-white hover:bg-green-600 transition-colors ease-in duration-200'>
                                     <span className="material-symbols-outlined me-2">
@@ -33,7 +59,7 @@ export class Division extends Component {
                                 </select>
                                 <span className='text-sm text-slate-600 ms-2'>entries</span>
                             </div>
-                            <div className='relative overflow-x-auto shadow-md sm:rounded-lg border border-slate-200'>
+                            <div className='relative overflow-x-auto shadow-md sm:rounded-lg border border-slate-200 mb-2'>
                                 <table className='rounded-md w-full text-sm text-left text-gray-500 dark:text-gray-400'>
                                     <thead className="text-xs text-slate-600 uppercase bg-gray-50">
                                         <tr>
@@ -111,11 +137,12 @@ export class Division extends Component {
                                     </li>
                                 </ul>
                             </nav>
-
                         </div>
                     </div>
-
                 </div>
+                <Modal isOpen={this.state.modalOpen} onClose={this.handleCloseModal}>
+                    <Textfield id='username' onChange={this.handleChange} />
+                </Modal>
             </div>
         )
     }

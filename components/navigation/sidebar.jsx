@@ -10,7 +10,7 @@ function Sidebar(props) {
                 <p className='font-bold ms-2'>PT.Deltomed</p>
             </div>
             <ul>
-                <SidebarItem icon="dashboard" title="Dashboard" />
+                <SidebarItem icon="dashboard" title="Dashboard" link="/" />
             </ul>
             <div className='mt-3 mb-3 text-slate-600 tracking-wider text-sm'>
                 Master
