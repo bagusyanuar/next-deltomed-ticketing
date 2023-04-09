@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Image from 'next/image'
 import Router from 'next/router'
+import axios from 'axios';
 
 
 class Login extends Component {
@@ -14,17 +15,23 @@ class Login extends Component {
   }
 
   onHandleChange = (e) => {
-    let id = e.target.id;
-    let value = e.target.value;
     this.setState({
       [e.target.id]: e.target.value
     })
-    console.log(id, value);
   }
 
-  handleSubmit = () => {
-    console.log(this.state.username);
-    Router.push("/dashboard");
+  handleSubmit = async () => {
+    const data = {
+      username: this.state.username,
+      password: this.state.password
+    }
+    try {
+      await axios.post('/api/login', data);
+        Router.push("/dashboard");
+    } catch (error) {
+      console.log(error.response.data);
+    }
+    
   }
   render() {
     return (
@@ -52,7 +59,7 @@ class Login extends Component {
                 lock
               </span>
               <input
-                disabled={true}
+                // disabled={true}
                 onChange={this.onHandleChange}
                 type="password"
                 name="password"
