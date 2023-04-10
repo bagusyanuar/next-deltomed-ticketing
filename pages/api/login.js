@@ -8,7 +8,7 @@ async function loginRoute(req, res) {
         username, password
     };
     try {
-        let response = await axios.post('http://localhost:8000/api/support/sign-in', JSON.stringify(body));
+        let response = await axios.post('http://localhost:8000/api/admin/sign-in', JSON.stringify(body));
         if (response.status === 200) {
             let data = response.data;
             let token = data.data;

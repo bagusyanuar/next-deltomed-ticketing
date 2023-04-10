@@ -3,18 +3,50 @@ import Sidebar from '../navigation/sidebar';
 import Navbar from '../navigation/navbar';
 import Textfield from '../forms/textfield'
 import Modal from '../modal/modal'
+import axios from 'axios';
 
 export class Division extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            modalOpen: false
+            modalOpen: false,
+            isLoading: false,
         }
     }
 
+    componentDidMount() {
+        console.log('mounting');
+        this.getDataDivision()
+    }
     handleChange = (e, value) => {
         console.log(value, e.target.id);
+    }
+
+    getDataDivision = async () => {
+        this.setState({
+            isLoading: true
+        })
+
+        axios.get('http://localhost:8000/api/admin/division').then((response) => {
+            console.log(response);
+        }).catch((e) => {
+            console.log(e);
+        }).finally(() => {
+            this.setState({
+                isLoading: false
+            })
+        })
+        // try {
+        //     const response = await axios.get('http://localhost:8000/api/admin/division')
+        //     console.log(response);
+        // } catch (error) {
+        //     console.log(error);
+        // } finally {
+        //     this.setState({
+        //         isLoading: false
+        //     })
+        // }
     }
 
     handleAddButton = (e) => {

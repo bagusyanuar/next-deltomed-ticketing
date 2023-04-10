@@ -6,7 +6,7 @@ function SidebarItem({ icon, title, link }) {
             <span className="material-symbols-outlined text-slate-600">
                 { icon }
             </span>
-            <a href={link} className='ms-2 text-slate-600 text-sm'>{title}</a>
+            <a href={link} className='ms-2 text-slate-600 text-sm w-full'>{title}</a>
         </li>
     )
 }

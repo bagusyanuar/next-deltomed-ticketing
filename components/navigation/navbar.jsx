@@ -1,4 +1,6 @@
+import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react'
+import Router from 'next/router'
 
 function useOuterClick(callback) {
     const callbackRef = useRef();
@@ -28,6 +30,15 @@ function Navbar({ title }) {
         setOpen(current => !current);
     }
 
+    const logoutHandler = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.get('/api/logout');
+            Router.push('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <div className='w-full h-16 flex px-8 items-center'>
             <div className='grow items-center'>
@@ -52,7 +63,7 @@ function Navbar({ title }) {
                             {/* <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a> */}
                             {/* <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Support</a> */}
                             {/* <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">License</a> */}
-                            <a href='#' className="text-gray-700 block w-full px-4 py-2 text-left text-sm hover:bg-slate-100" role="menuitem" tabIndex="-1" id="menu-item-3">Sign out</a>
+                            <a href='#' onClick={logoutHandler} className="text-gray-700 block w-full px-4 py-2 text-left text-sm hover:bg-slate-100" role="menuitem" tabIndex="-1" id="menu-item-3">Sign out</a>
                         </div>
                     </div>
                 </div>
