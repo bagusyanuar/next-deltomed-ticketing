@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
+import PropTypes from 'prop-types';
 
-function Modal({isOpen, children, onClose}) {
+function Modal({ isOpen, onClose, title,  children  }) {
     const [isShow, setShow] = useState(false)
 
     const handleClose = (e) => {
@@ -11,26 +12,39 @@ function Modal({isOpen, children, onClose}) {
         if (isOpen) {
             setTimeout(() => {
                 setShow(true)
-            }, 300);
+            }, 50);
         } else {
             setShow(false)
         }
     }, [isOpen])
     return (
-        <div className={`${isOpen ? 'relative' : 'hidden'} z-10`} aria-labelledby='modal-title' role="dialog" aria-modal={true}>
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-            <div className={`fixed inset-0 z-10 overflow-y-auto`}>
-                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                    <div className={`transform relative ${isOpen ? '' : '-translate-y-full opacity-0'} w-1/4 overflow-hidden rounded-lg bg-white shadow-xl ease-in transition-transform duration-1000 transition-opacity`}>
-                        <div className="bg-white px-4 pb-4 pt-3">
-                            {children}
-                        </div>
-                        
+        <div className={`${isOpen ? '' : 'hidden'} absolute z-30 inset-0 bg-black bg-opacity-30 h-screen w-full flex justify-center items-start md:items-center pt-10 md:pt-0`}>
+            {/* modal */}
+            <div className={`${isShow ? '' : 'opacity-0 -translate-y-full'} transform  relative w-10/12 md:w-1/4 bg-white rounded shadow-lg transition-opacity transition-transform ease-in-out duration-[1200ms]`}>
+                {/* header */}
+                <div className='px-4 py-3 border-b border-gray-200'>
+                    <div className='flex text-slate-600 text-sm items-center justify-between'>
+                        <div className='font-semibold'>{title}</div>
+                        <button onClick={handleClose}>x</button>
                     </div>
+                </div>
+
+                {/* body */}
+                <div className='px-4 py-4'>
+                    {children}
                 </div>
             </div>
         </div>
     )
 }
 
+Modal.defaultProps = {
+    title: 'Modal Title'
+}
+
+Modal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func,
+    title: PropTypes.string
+}
 export default Modal

@@ -4,48 +4,44 @@ import Navbar from '../navigation/navbar';
 import Textfield from '../forms/textfield'
 import Modal from '../modal/modal'
 import axios from 'axios';
-import Loader from '../loader/base-loader'
+import TopLoadingBar from '../loader/loading-bar';
+import { AxiosInstance } from '../../lib/api'
 
 export class Division extends Component {
 
     constructor(props) {
         super(props)
+        AxiosInstance.defaults.headers.common.Authorization = `Bearer ${props.token}`
         this.state = {
             modalOpen: false,
             isLoading: false,
+            progress: 0,
+            name: ''
         }
     }
 
     componentDidMount() {
-        console.log('mounting');
         this.getDataDivision()
     }
-    handleChange = (e, value) => {
-        console.log(value, e.target.id);
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
     }
 
     getDataDivision = async () => {
-        this.setState({
-            isLoading: true
-        })
-
-        // try {
-        //     const response = await axios.get('http://localhost:8000/api/admin/division')
-        //     console.log(response);
-        // } catch (error) {
-        //     console.log(error);
-        // } finally {
-        //     this.setState({
-        //         isLoading: false
-        //     })
-        // }
+        try {
+            const response = await AxiosInstance.get('/division')
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            this.setState({
+                isLoading: false
+            })
+        }
     }
 
-    saveDataDivision = async () => {
-        this.setState({
-            isLoading: true
-        })
-    }
     handleAddButton = (e) => {
         this.setState({
             modalOpen: true
@@ -58,12 +54,38 @@ export class Division extends Component {
         })
     }
 
-    handleSave = (e) => {
-
+    handleClear = () => {
+        this.setState({
+            name: ''
+        })
+    }
+    handleSave = async (e) => {
+        const data = {
+            name: this.state.name
+        }
+        try {
+            await AxiosInstance.post('/division', data, {
+                onUploadProgress: (progressEvent) => {
+                    let progress = (progressEvent.loaded / progressEvent.total) * 100;
+                    this.setState({
+                        progress: progress
+                    })
+                }
+            })
+            this.handleClear()
+        } catch (error) {
+            console.log(error);
+        }
     }
     render() {
         return (
             <div className='flex'>
+                <TopLoadingBar progress={this.state.progress} onFinished={() => {
+                    this.setState({
+                        progress: 0
+                    })
+                }} />
+
                 <Sidebar />
                 <div className='grow bg-base'>
                     <Navbar title="Divisi" />
@@ -90,23 +112,12 @@ export class Division extends Component {
                         </div>
                     </div>
                 </div>
-                <Modal isOpen={this.state.modalOpen} onClose={this.handleCloseModal}>
-                    <div className='flex w-full content-between items-center mb-2'>
-                        <span className='grow text-sm text-slate-600 text-left'>Tambah Divisi</span>
-                        <button onClick={this.handleCloseModal}>
-                            <span className="material-symbols-outlined text-sm text-slate-600">
-                                close
-                            </span>
-                        </button>
-                    </div>
-                    <div className='border-b border-slate-300 mb-3'>
-                    </div>
-                    <Textfield id='name' placeholder='name' onChange={this.handleChange} />
+                <Modal title='Tambah Divisi' isOpen={this.state.modalOpen} onClose={this.handleCloseModal}>
+                    <Textfield id='name' placeholder='name' value={this.state.name} onChange={this.handleChange} />
                     <div className="flex justify-end mt-3">
                         <div className=''>
                             <button
-                                disabled={this.state.isLoading}
-                                onClick={this.handleAddButton}
+                                onClick={this.handleSave}
                                 type='button'
                                 className='flex items-center text-sm bg-green-500 rounded-md py-1 px-4 text-white hover:bg-green-600 transition-colors ease-in duration-200'>
                                 <span className="material-symbols-outlined me-1">
@@ -115,9 +126,6 @@ export class Division extends Component {
                                 <span>Simpan</span>
                             </button>
                         </div>
-
-                        {/* <button onClick={this.handleCloseModal} type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button> */}
-                        {/* <button type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> */}
                     </div>
                 </Modal>
             </div>
