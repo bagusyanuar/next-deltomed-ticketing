@@ -4,10 +4,10 @@ import SidebarItem from './sidebar-item'
 
 function Sidebar(props) {
     return (
-        <div className='flex flex-col h-screen md:w-[280px] sm:w-14 border-r border-slate-200 px-5 sm:px-4 py-5 transition-all ease-in-out duration-500'>
-            <div className='md:flex md:items-center md:mt-3 md:mb-10 sm:hidden'>
+        <div className='flex flex-col h-screen md:w-[280px] sm:w-14 border-r border-slate-200 px-5 md:px-5 sm:px-1 py-5 transition-all ease-in-out duration-500'>
+            <div className='md:flex md:items-center md:mt-3 md:mb-10 sm:mb-10 sm:flex sm:justify-center'>
                 <Image src="/assets/logo.png" width={30} height={10} alt="logo" />
-                <p className='font-bold ms-2'>PT.Deltomed</p>
+                <p className='md:block font-bold ms-2 sm:hidden'>PT.Deltomed</p>
             </div>
             <ul>
                 <SidebarItem icon="dashboard" title="Dashboard" link="/" />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Sidebar from '../navigation/sidebar';
-import Navbar from '../navigation/navbar';
+import Sidebar from '../navigation/sidebar-old';
+import Navbar from '../navigation/navbar-old';
 import Textfield from '../forms/textfield'
 import Modal from '../modal/modal'
 import axios from 'axios';

@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './navbar'
+import Navbar from './navbar-old'
 import Sidebar from './sidebar'
 
 function Navigation({ title, children }) {
