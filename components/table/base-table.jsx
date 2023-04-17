@@ -1,14 +1,23 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 
-function BaseTable() {
+function BaseTable({ data }) {
+
+    const [perPage, setPerPage] = useState(5)
+    const [page, setPage] = useState(1)
+
+    const handleChangePerpage = (e) => {
+        let perPage = parseInt(e.target.value);
+        setPerPage(perPage)
+        console.log(e.target.value);
+    }
     return (
         <div>
 
             {/* per page section */}
             <div className='flex items-center mb-3'>
                 <span className='text-sm text-slate-600 me-2'>Show :</span>
-                <select id='page_length' className='px-3 py-1 rounded-md border bg-inherit text-sm text-slate-600'>
+                <select onChange={handleChangePerpage} id='page_length' className='px-3 py-1 rounded-md border bg-inherit text-sm text-slate-600'>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={5}>5</option>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={10}>10</option>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={25}>25</option>
@@ -33,7 +42,18 @@ function BaseTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="bg-white border-b">
+                        {
+                            data.slice((page - 1), ((page - 1) + perPage)).map((value, index) => {
+                                return (
+                                    <tr key={index} className='bg-white border-b'>
+                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{index + 1}</td>
+                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap`}>{value['name']}</td>
+                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-3`}>action</td>
+                                    </tr>
+                                );
+                            })
+                        }
+                        {/* <tr className="bg-white border-b">
                             <td className="px-6 py-3 w-1 text-sm text-slate-600 whitespace-nowrap">
                                 1
                             </td>
@@ -56,7 +76,7 @@ function BaseTable() {
                             <td className="px-6 py-3 w-3">
                                 <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
             </div>
