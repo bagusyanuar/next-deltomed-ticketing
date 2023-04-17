@@ -4,8 +4,11 @@ import SidebarItem from '../navigation/sidebar/item'
 import Navbar from '../navigation/navbar'
 import Image from 'next/image'
 import Content from './content'
+import { useRouter } from 'next/router'
 
 function Layout({ title, children }) {
+    const router = useRouter();
+    const path = router.pathname;
     return (
         <div>
             <Sidebar>
@@ -13,8 +16,8 @@ function Layout({ title, children }) {
                     <Image src="/assets/logo.png" width={30} height={10} alt="logo" />
                     <p className='md:block font-bold ms-2 sm:hidden'>Company Name</p>
                 </div>
-                <SidebarItem icon="dashboard" title="Dashboard" link="/dashboard" active={true} />
-                <SidebarItem icon="group_work" title="Tag" link="division" />
+                <SidebarItem icon="dashboard" title="Dashboard" link="/dashboard" active={path === '/dashboard' ? true : false} />
+                <SidebarItem icon="group_work" title="Division" link="/division" active={path === '/division' ? true : false}/>
                 <SidebarItem icon="location_searching" title="Location" />
                 <SidebarItem icon="account_circle" title="Users" />
                 <SidebarItem icon="confirmation_number" title="Products" />

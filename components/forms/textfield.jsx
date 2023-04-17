@@ -14,7 +14,7 @@ function Textfield({ id, value, onChange, placeholder }) {
             placeholder={placeholder}
             type="text"
             value={value}
-            className='text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block focus:outline-none focus:border-slate-500' />
+            className='text-sm form-input rounded-md border border-slate-400 py-2 px-2.5 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block focus:outline-none focus:border-slate-500' />
     )
 }
 
