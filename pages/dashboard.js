@@ -1,9 +1,14 @@
-import Dashboard from '../components/layouts/dashboard'
+import Dashboard from '../components/pages/dashboard'
+import Layouts from '../components/layouts'
 import { withIronSessionSsr } from 'iron-session/next'
 import { ironSessionOptions } from '../lib/session'
 
 export default function DashboardPage({ token }) {
-    return (<Dashboard token={token} />);
+    return (
+        <Layouts title='Dashboard'>
+            <Dashboard />
+        </Layouts>
+    );
 }
 
 export const getServerSideProps = withIronSessionSsr(async function getServerSideProps({ req }) {

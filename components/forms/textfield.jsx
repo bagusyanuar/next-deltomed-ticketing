@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-function Textfield({ id, onChange, placeholder }) {
+function Textfield({ id, value, onChange, placeholder }) {
 
     const onHandleChange = (e) => {
-        let value = e.target.value;
-        onChange(e, value)
+        // let value = e.target.value;
+        onChange(e)
     }
     return (
         <input
@@ -13,7 +13,8 @@ function Textfield({ id, onChange, placeholder }) {
             onChange={onHandleChange}
             placeholder={placeholder}
             type="text"
-            className='text-sm form-input rounded-md border border-slate-400 py-1 px-2 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block focus:outline-none focus:border-slate-500' />
+            value={value}
+            className='text-sm form-input rounded-md border border-slate-400 py-2 px-2.5 bg-white placeholder-gray-400 text-gray-500 appearance-none w-full block focus:outline-none focus:border-slate-500' />
     )
 }
 

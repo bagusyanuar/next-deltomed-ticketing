@@ -1,12 +1,17 @@
 import { withIronSessionSsr } from 'iron-session/next';
-import Division from '../../components/layouts/division'
+import Division from '../../components/pages/division'
 import { ironSessionOptions } from '../../lib/session'
+import Layouts from '../../components/layouts'
 
 export default function DivisionPage({ token }) {
-    return (<Division token={token}/>);
+    return (
+        <Layouts title='Division'>
+            <Division />
+        </Layouts>
+    );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function getServerSideProps({ req}) {
+export const getServerSideProps = withIronSessionSsr(async function getServerSideProps({ req }) {
     const token = req.session.token;
     if (!token) {
         return {

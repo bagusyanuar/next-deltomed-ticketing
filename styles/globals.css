@@ -14,6 +14,7 @@
   --primary-color: #7a9f3f;
   --primary-color-shade: #3d5020;
   --back-color: #eff1f3;
+  --loading-bar-color: #28b485;
 
   --primary-glow: conic-gradient(
     from 180deg at 50% 50%,
@@ -94,4 +95,20 @@ body {
     100% {
       transform: translateX(0px) translateY(0px);
     }
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
 }
