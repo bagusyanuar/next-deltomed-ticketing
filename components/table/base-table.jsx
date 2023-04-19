@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types';
 
-function BaseTable({ data }) {
+function BaseTable({ column, data, dataKey }) {
 
-    const [perPage, setPerPage] = useState(1)
+    const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
     const [countPage, setCountPage] = useState(0)
 
@@ -50,8 +51,6 @@ function BaseTable({ data }) {
             <div className='flex items-center mb-3'>
                 <span className='text-sm text-slate-600 me-2'>Show :</span>
                 <select onChange={handleChangePerpage} id='page_length' className='px-3 py-1 rounded-md border bg-inherit text-sm text-slate-600'>
-                    <option className='bg-white text-slate-600 hover:bg-slate-200' value={1}>1</option>
-                    <option className='bg-white text-slate-600 hover:bg-slate-200' value={2}>2</option>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={5}>5</option>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={10}>10</option>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={25}>25</option>
@@ -62,63 +61,49 @@ function BaseTable({ data }) {
             {/* main table section */}
             <div className='relative overflow-x-auto shadow-md sm:rounded-lg border border-slate-200 mb-2'>
                 <table className='rounded-md w-full text-sm text-left text-gray-500 dark:text-gray-400'>
-                    <thead className="text-xs text-slate-600 uppercase bg-gray-50">
+                    <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
-                            <th scope="col" className="px-6 py-3 w-1">
-                                #
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Nama
-                            </th>
-                            <th scope="col" className="px-6 py-3 w-3">
-                                Action
-                            </th>
+                            {
+                                column.map((v, i) => {
+                                    return (
+                                        <th key={i} scope="col" className={`px-6 py-3 ${v['className']}`}>
+                                            {v['value']}
+                                        </th>
+                                    )
+                                })
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            data.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
+                            data.length > 0 ? data.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
                                 return (
                                     <tr key={index} className='bg-white border-b'>
                                         <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td>
-                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap`}>{value['name']}</td>
-                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-3`}>action</td>
+                                        {
+                                            dataKey.map((v, i) => {
+                                                return(
+                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap ${v['className']}`}>{value[v['name']]}</td>
+                                                )
+                                            })
+                                        }
                                     </tr>
                                 );
-                            })
+                            }) : <tr>
+                                <td colSpan={column.length} className='text-center px-6 py-3 text-gray-500 whitespace-nowrap'>No Record</td>
+                            </tr>
                         }
-                        {/* <tr className="bg-white border-b">
-                            <td className="px-6 py-3 w-1 text-sm text-slate-600 whitespace-nowrap">
-                                1
-                            </td>
-                            <td className="px-6 py-3 text-sm text-slate-600">
-                                Teknis
-                            </td>
 
-                            <td className="px-6 py-3 w-3">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-6 py-3 w-1 text-sm text-slate-600 whitespace-nowrap">
-                                2
-                            </td>
-                            <td className="px-6 py-3 text-sm text-slate-600">
-                                Umum
-                            </td>
-
-                            <td className="px-6 py-3 w-3">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr> */}
                     </tbody>
                 </table>
             </div>
 
             {/* pagination section */}
             <nav className='flex items-center justify-between pt-4'>
-                <span className='text-sm text-slate-600 '>Showing <span className='font-semibold'>{((page - 1) * perPage) + 1}-{(((page - 1) * perPage) + perPage) > data.length ? data.length : (((page - 1) * perPage) + perPage)}</span> of <span className='font-semibold'>{data.length}</span>
-                </span>
+                {
+                    data.length > 0 ? <span className='text-sm text-slate-600 '>Showing <span className='font-semibold'>{((page - 1) * perPage) + 1}-{(((page - 1) * perPage) + perPage) > data.length ? data.length : (((page - 1) * perPage) + perPage)}</span> of <span className='font-semibold'>{data.length}</span>
+                    </span> : <span className='text-sm text-slate-600 '>Showing Empty Record</span>
+                }
                 <ul className='inline-flex items-center -space-x-px'>
                     <li>
                         <a href='#' onClick={handlePreviousPage} className='px-3 py-2 ml-0 leading-tight text-sm text-slate-600 border border-slate-300 rounded-l-md'>
@@ -151,4 +136,9 @@ function BaseTable({ data }) {
     )
 }
 
+BaseTable.propTypes = {
+    column: PropTypes.array,
+    data: PropTypes.array,
+    dataKey: PropTypes.array,
+}
 export default BaseTable

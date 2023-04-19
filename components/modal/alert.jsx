@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 
-function ModalAlert({ isOpen, onClose }) {
+function ModalAlert({ isOpen, onClose, message }) {
     const [isShow, setShow] = useState(false)
 
     useEffect(() => {
@@ -21,7 +21,7 @@ function ModalAlert({ isOpen, onClose }) {
                         <Image src="/assets/error.svg" width={200} height={200} alt="error" />
                     </div>
                     <p className='mt-5 font-bold text-gray-600 text-center text-sm'>Error!!!</p>
-                    <p className='text-gray-600 text-center text-sm mb-5'>Internal Server Error</p>
+                    <p className='text-gray-600 text-center text-sm mb-5'>{message}</p>
                     <div className='flex justify-center mt-3'>
                         <button
                             onClick={onClose}
