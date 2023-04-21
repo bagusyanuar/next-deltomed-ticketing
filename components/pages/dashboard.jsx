@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 
 export class Dashboard extends Component {
+
+  componentDidMount () {
+  }
   render() {
     return (
       <div>
