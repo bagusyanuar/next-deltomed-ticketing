@@ -9,7 +9,9 @@ const combinedReducer = combineReducers({
     division
 })
 export const store = configureStore({
-    reducer: {combinedReducer}
+    reducer: {
+        reducer: combinedReducer
+    }
 })
 
 export default store

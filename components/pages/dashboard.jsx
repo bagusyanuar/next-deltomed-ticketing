@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { increment } from '../../redux/features/counterSlice'
 
 export class Dashboard extends Component {
 
   componentDidMount () {
+    console.log(this.props.count);
   }
   render() {
     return (
@@ -12,9 +15,17 @@ export class Dashboard extends Component {
           <div className='h-40 bg-white rounded-lg shadow-md'></div>
           <div className='h-40 bg-white rounded-lg shadow-md'></div>
         </div>
+        <div className='mt-3'>
+          <button onClick={() => this.props.increment()}>Click</button>
+        </div>
       </div>
     )
   }
 }
 
-export default Dashboard
+const mapStateToProps = (state) => ({
+  count: state.reducer.counter.count
+})
+
+const mapDispatchToProps = { increment }
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

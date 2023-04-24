@@ -5,18 +5,23 @@ const getDivisionURL = '/division';
 
 const initialState = {
     isLoading: false,
-    divisions: []
+    divisions: [],
+    error: false,
+    message: ''
 }
 
-export const getDivisionData = createAsyncThunk('division/getDivisionData', async (arg, { rejectWithValue }) => {
+export const getDivisionData = createAsyncThunk('division/getDivisionData', async (AxiosInstance, { rejectWithValue }) => {
     try {
-        const response = await axios.get(getDivisionURL);
-        console.log(response);
+        const response = await AxiosInstance.get(getDivisionURL);
         return response.data
     } catch (error) {
         console.log(error);
+        return rejectWithValue({
+            data: {
+                message: error.response === undefined ? error.message : error.response.data.message
+            }
+        })
     }
-    // return fetch(getDivisionURL).then((resp) => resp.json()).catch((err) => console.log(err));
 })
 
 const divisionSlice = createSlice({
@@ -28,6 +33,19 @@ const divisionSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getDivisionData.pending, (state, { payload }) => {
             state.isLoading = true
+            state.divisions = []
+        }),
+        builder.addCase(getDivisionData.fulfilled, (state, { payload }) => {
+            state.isLoading = false
+            state.divisions = payload.entries
+            state.error = false
+        }),
+        builder.addCase(getDivisionData.rejected, (state, { payload }) => {
+            console.log(payload);
+            state.isLoading = false
+            state.divisions = []
+            state.error = true
+            state.message = payload.data.message
         })
     }
 })

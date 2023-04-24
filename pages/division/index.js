@@ -6,7 +6,7 @@ import Layouts from '../../components/layouts'
 export default function DivisionPage({ token }) {
     return (
         <Layouts title='Division'>
-            <Division />
+            <Division token={token}/>
         </Layouts>
     );
 }

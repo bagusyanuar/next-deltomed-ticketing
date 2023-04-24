@@ -10,7 +10,7 @@ import {
 import Login from '../components/layouts/login'
 
 export default function Home() {
-  return ( < Login / > )
+  return (< Login />)
 }
 
 export const getServerSideProps = withIronSessionSsr(async function getServerSideProps({
