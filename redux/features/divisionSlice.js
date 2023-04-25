@@ -44,7 +44,9 @@ const divisionSlice = createSlice({
     name: 'division',
     initialState,
     reducers: {
-
+        resetError: (state) => {
+            state.error = false
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(getData.pending, (state, { payload }) => {
@@ -65,14 +67,18 @@ const divisionSlice = createSlice({
             }),
             builder.addCase(createData.pending, (state, { payload }) => {
                 state.isLoadingCreate = true;
+                state.error = false
             }),
             builder.addCase(createData.fulfilled, (state, { payload }) => {
                 state.isLoadingCreate = false;
             }),
             builder.addCase(createData.rejected, (state, { payload }) => {
                 state.isLoadingCreate = false;
+                state.error = true
             })
     }
 })
+
+export const { resetError } = divisionSlice.actions
 
 export default divisionSlice.reducer;

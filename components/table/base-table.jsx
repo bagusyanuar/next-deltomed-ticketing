@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
 
-function BaseTable({ column, data, dataKey }) {
+function BaseTable({ headers, column, data, dataKey }) {
 
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
@@ -64,7 +64,7 @@ function BaseTable({ column, data, dataKey }) {
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
                             {
-                                column.map((v, i) => {
+                                headers.map((v, i) => {
                                     return (
                                         <th key={i} scope="col" className={`px-6 py-3 ${v['className']}`}>
                                             {v['value']}
@@ -82,7 +82,7 @@ function BaseTable({ column, data, dataKey }) {
                                         <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td>
                                         {
                                             dataKey.map((v, i) => {
-                                                return(
+                                                return (
                                                     <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap ${v['className']}`}>{value[v['name']]}</td>
                                                 )
                                             })
@@ -90,7 +90,7 @@ function BaseTable({ column, data, dataKey }) {
                                     </tr>
                                 );
                             }) : <tr>
-                                <td colSpan={column.length} className='text-center px-6 py-3 text-gray-500 whitespace-nowrap'>No Record</td>
+                                <td colSpan={headers.length} className='text-center px-6 py-3 text-gray-500 whitespace-nowrap'>No Record</td>
                             </tr>
                         }
 
@@ -137,6 +137,7 @@ function BaseTable({ column, data, dataKey }) {
 }
 
 BaseTable.propTypes = {
+    headers: PropTypes.array,
     column: PropTypes.array,
     data: PropTypes.array,
     dataKey: PropTypes.array,
