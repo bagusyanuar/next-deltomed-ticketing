@@ -9,7 +9,7 @@ import { AxiosInstance } from '../../lib/api'
 import TopLoadingBar from '../loader/loading-bar'
 
 import { connect } from 'react-redux'
-import { getData } from '../../redux/features/divisionSlice'
+import { getData, createData } from '../../redux/features/divisionSlice'
 
 export class Division extends Component {
 
@@ -93,8 +93,9 @@ export class Division extends Component {
         })
     }
     handleSave = async (e) => {
-        const resp = await this.props.getData(AxiosInstance)
-        console.log(resp);
+        // const resp = await this.props.getData(AxiosInstance)
+        // console.log(resp);
+        
     }
     render() {
         return (
@@ -158,5 +159,5 @@ const mapStateToProps = (state) => ({
     division: state.reducer.division
 })
 
-const mapDispatchToProps = { getData }
+const mapDispatchToProps = { getData, createData }
 export default connect(mapStateToProps, mapDispatchToProps)(Division)
