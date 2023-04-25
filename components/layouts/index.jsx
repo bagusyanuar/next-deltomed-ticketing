@@ -18,9 +18,9 @@ function Layout({ title, children }) {
                 </div>
                 <SidebarItem icon="dashboard" title="Dashboard" link="/dashboard" active={path === '/dashboard' ? true : false} />
                 <SidebarItem icon="group_work" title="Division" link="/division" active={path === '/division' ? true : false}/>
-                <SidebarItem icon="location_searching" title="Location" />
-                <SidebarItem icon="account_circle" title="Users" />
-                <SidebarItem icon="confirmation_number" title="Products" />
+                <SidebarItem icon="location_searching" title="Location" link="/location"/>
+                <SidebarItem icon="account_circle" title="Users" link="/users"/>
+                <SidebarItem icon="confirmation_number" title="Products" link="/products"/>
             </Sidebar>
             <Content>
                 <Navbar title={title} />
