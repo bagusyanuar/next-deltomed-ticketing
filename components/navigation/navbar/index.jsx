@@ -44,7 +44,7 @@ function Navbar({ title, username }) {
     }
 
     return (
-        <div className='w-full h-12 flex items-center justify-between px-5 md:px-5 lg:px-5 sm:px-3'>
+        <div className='w-full h-12 flex items-center justify-between px-5 sm:px-3 md:px-3 lg:px-5'>
             <div className='flex items-center'>
                 <p className='font-bold text-2xl text-gray-600'>{title}</p>
             </div>

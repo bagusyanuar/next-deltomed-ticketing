@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios';
 
 const getDivisionURL = '/division';
 
@@ -9,16 +8,14 @@ const initialState = {
     divisions: [],
     error: false,
     success: false,
-    created: false,
     message: ''
 }
 
-export const getData = createAsyncThunk('division/getData', async (AxiosInstance, { rejectWithValue }) => {
+export const getData = createAsyncThunk('division/getData', async ({ AxiosInstance, limit, offset }, { rejectWithValue }) => {
     try {
-        const response = await AxiosInstance.get(getDivisionURL);
+        const response = await AxiosInstance.get(`${getDivisionURL}?limit=${limit}&offset=${offset}`);
         return response.data
     } catch (error) {
-        console.log(error);
         return rejectWithValue({
             data: {
                 message: error.response === undefined ? error.message : error.response.data.message
@@ -48,20 +45,22 @@ const divisionSlice = createSlice({
     reducers: {
         resetError: (state) => {
             state.error = false
+        },
+        resetSuccess: (state) => {
+            state.success = false
         }
     },
     extraReducers: (builder) => {
         builder.addCase(getData.pending, (state, { payload }) => {
             state.isLoading = true
-            state.divisions = []
         }),
             builder.addCase(getData.fulfilled, (state, { payload }) => {
+                console.log(payload);
                 state.isLoading = false
-                state.divisions = payload.entries
+                state.divisions = payload.data
                 state.error = false
             }),
             builder.addCase(getData.rejected, (state, { payload }) => {
-                console.log(payload);
                 state.isLoading = false
                 state.divisions = []
                 state.error = true
@@ -70,21 +69,21 @@ const divisionSlice = createSlice({
             builder.addCase(createData.pending, (state, { payload }) => {
                 state.isLoadingCreate = true;
                 state.error = false
-                state.created = false
+                state.success = false
             }),
             builder.addCase(createData.fulfilled, (state, { payload }) => {
                 state.isLoadingCreate = false;
                 state.error = false
-                state.created = true
+                state.success = true
             }),
             builder.addCase(createData.rejected, (state, { payload }) => {
                 state.isLoadingCreate = false;
                 state.error = true
-                state.created = false
+                state.success = false
             })
     }
 })
 
-export const { resetError } = divisionSlice.actions
+export const { resetError, resetSuccess } = divisionSlice.actions
 
 export default divisionSlice.reducer;

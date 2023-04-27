@@ -14,13 +14,13 @@ function Layout({ title, children }) {
             <Sidebar>
                 <div className='md:flex md:items-center md:mt-3 md:mb-10 sm:mb-10 sm:flex sm:justify-center'>
                     <Image src="/assets/logo.png" width={30} height={10} alt="logo" />
-                    <p className='md:block font-bold ms-2 sm:hidden'>Company Name</p>
+                    <p className='font-bold ms-2 sm:hidden md:hidden lg:block block'>Company Name</p>
                 </div>
                 <SidebarItem icon="dashboard" title="Dashboard" link="/dashboard" active={path === '/dashboard' ? true : false} />
-                <SidebarItem icon="group_work" title="Division" link="/division" active={path === '/division' ? true : false}/>
-                <SidebarItem icon="location_searching" title="Location" link="/location"/>
-                <SidebarItem icon="account_circle" title="Users" link="/users"/>
-                <SidebarItem icon="confirmation_number" title="Products" link="/products"/>
+                <SidebarItem icon="group_work" title="Division" link="/division" active={path === '/division' ? true : false} />
+                <SidebarItem icon="location_searching" title="Location" link="/location" />
+                <SidebarItem icon="account_circle" title="Users" link="/users" />
+                <SidebarItem icon="confirmation_number" title="Products" link="/products" />
             </Sidebar>
             <Content>
                 <Navbar title={title} />

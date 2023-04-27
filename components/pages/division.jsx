@@ -4,10 +4,10 @@ import ModalAlert from '../modal/alert'
 import Textfield from '../forms/textfield'
 import BaseTable from '../table/base-table'
 import { AxiosInstance } from '../../lib/api'
-import TopLoadingBar from '../loader/loading-bar'
 
 import { connect } from 'react-redux'
-import { getData, createData, resetError } from '../../redux/features/divisionSlice'
+import { getData, createData, resetError, resetSuccess } from '../../redux/features/divisionSlice'
+
 
 export class Division extends Component {
 
@@ -15,89 +15,36 @@ export class Division extends Component {
         super(props)
         AxiosInstance.defaults.headers.common.Authorization = `Bearer ${props.token}`
         this.state = {
-            isLoadingCreate: false,
-            progress: 0,
             isModalOpen: false,
-            error: false,
-            message: '',
             name: '',
             data: [],
-            tableColumn: [
-                {
-                    value: '#',
-                    className: 'w-1 text-center'
-                },
-                {
-                    value: 'Nama',
-                    className: ''
-                },
-                {
-                    value: 'Action',
-                    className: 'w-3 text-center'
-                },
-            ],
-            tableDataKey: [
-                {
-                    name: 'name',
-                    className: ''
-                },
-                {
-                    name: 'action',
-                    className: 'w-3'
-                },
-            ]
+            tableHeader: tableHeader,
         }
     }
 
-    create = async () => {
+    async componentDidMount() {
+
+        await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
+        this.createTableData()
+    }
+
+    createTableData = () => {
+        let data = tableColumns(this.props.division.divisions);
         this.setState({
-            isLoadingCreate: true,
-            progress: 2
-        })
-        try {
-            const data = { name: this.state.name }
-            let config = {
-                onUploadProgress: (progressEvent) => {
-                    let progress = (progressEvent.loaded / progressEvent.total) * 100;
-                    console.log(progress);
-                    this.setState({
-                        progress: progress
-                    })
-                }
-            }
-            await AxiosInstance.post('/division', JSON.stringify(data), config)
-            console.log('success');
-        } catch (error) {
-            console.log(error.response);
-            let message = error.response === undefined ? 'internal server error...' : error.response.data.message;
-            this.setState({
-                error: true,
-                progress: 100,
-                message: message
-            })
-        } finally {
-            this.setState({
-                isLoadingCreate: false
-            })
-        }
-    }
-
-    createDummy = () => {
-        let index = this.state.data.length > 0 ? this.state.data[this.state.data.length - 1]['id'] : 0
-        this.state.data.push({
-            id: (index + 1),
-            name: this.state.name,
-            action: (<a href='#'>Edit</a>)
+            data: data
         })
     }
     handleSave = async (e) => {
         // const resp = await this.props.getData(AxiosInstance)
         // console.log(resp);
         const data = { name: this.state.name }
-        await this.props.createData({
+        const resp = await this.props.createData({
             AxiosInstance, data: JSON.stringify(data)
         })
-        if (!this.props.division.error) {
+        await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
+        this.createTableData()
+        console.log(resp);
+        if (this.props.division.success) {
             this.setState({
                 name: ''
             })
@@ -125,7 +72,7 @@ export class Division extends Component {
                     <div className='px-4 py-4'>
                         <p className='text-gray-600 text-sm'>Data Table Division</p>
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
-                        <BaseTable headers={this.state.tableColumn} data={this.state.data} dataKey={this.state.tableDataKey} />
+                        <BaseTable headers={this.state.tableHeader} data={this.state.data} />
                     </div>
                 </div>
                 <Modal title='Add Item' isOpen={this.state.isModalOpen} onClose={() => { this.setState({ isModalOpen: false }) }}>
@@ -151,15 +98,55 @@ export class Division extends Component {
                     </div>
                 </Modal>
                 <ModalAlert type='error' isOpen={this.props.division.error} onClose={() => { this.props.resetError() }} message={`internal server error`} />
-                <ModalAlert type='success' isOpen={this.props.division.success} onClose={() => { this.props.resetError() }} message={`success`} />
+                <ModalAlert type='success' isOpen={this.props.division.success} onClose={() => { this.props.resetSuccess() }} message={`success`} />
             </div>
         )
     }
+}
+
+const tableHeader = [
+    {
+        value: '#',
+        className: 'w-1 text-center'
+    },
+    {
+        value: 'Nama',
+        className: ''
+    },
+    {
+        value: 'Action',
+        className: 'w-3 text-center'
+    },
+]
+
+function tableColumns(data) {
+    let results = [];
+    data.forEach(value => {
+        let tmpRowData = [
+            {
+                value: value['name'],
+                className: ''
+            },
+            {
+                value: (<a href='#'>Edit</a>),
+                className: 'text-center'
+            }
+        ];
+
+        let tmp = {
+            row: value,
+            data: tmpRowData
+        }
+        results.push(tmp)
+    });
+    return results;
 }
 
 const mapStateToProps = (state) => ({
     division: state.reducer.division
 })
 
-const mapDispatchToProps = { getData, createData, resetError }
+const mapDispatchToProps = { getData, createData, resetError, resetSuccess }
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(Division)

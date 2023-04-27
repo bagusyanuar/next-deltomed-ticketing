@@ -81,9 +81,9 @@ function BaseTable({ headers, column, data, dataKey }) {
                                     <tr key={index} className='bg-white border-b'>
                                         <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td>
                                         {
-                                            dataKey.map((v, i) => {
+                                            value.data.map((v, i) => {
                                                 return (
-                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap ${v['className']}`}>{value[v['name']]}</td>
+                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap ${v['className']}`}>{v['value']}</td>
                                                 )
                                             })
                                         }
