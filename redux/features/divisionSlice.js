@@ -8,6 +8,8 @@ const initialState = {
     isLoadingCreate: false,
     divisions: [],
     error: false,
+    success: false,
+    created: false,
     message: ''
 }
 
@@ -68,13 +70,17 @@ const divisionSlice = createSlice({
             builder.addCase(createData.pending, (state, { payload }) => {
                 state.isLoadingCreate = true;
                 state.error = false
+                state.created = false
             }),
             builder.addCase(createData.fulfilled, (state, { payload }) => {
                 state.isLoadingCreate = false;
+                state.error = false
+                state.created = true
             }),
             builder.addCase(createData.rejected, (state, { payload }) => {
                 state.isLoadingCreate = false;
                 state.error = true
+                state.created = false
             })
     }
 })
