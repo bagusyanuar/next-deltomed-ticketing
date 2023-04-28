@@ -1,8 +1,10 @@
 import React, { Component, useEffect } from 'react'
 import Modal from '../modal/modal'
 import ModalAlert from '../modal/alert'
+import ModalConfirmation from '../modal/confirmation'
 import Textfield from '../forms/textfield'
 import BaseTable from '../table/base-table'
+import BaseAction from '../table/base-action';
 import { AxiosInstance } from '../../lib/api'
 
 import { connect } from 'react-redux'
@@ -16,6 +18,7 @@ export class Division extends Component {
         AxiosInstance.defaults.headers.common.Authorization = `Bearer ${props.token}`
         this.state = {
             isModalOpen: false,
+            isModalConfirmation: false,
             name: '',
             data: [],
             tableHeader: tableHeader,
@@ -27,13 +30,19 @@ export class Division extends Component {
         this.createTableData()
     }
 
-    handleEditClick = (e, rowData) => {
-        e.preventDefault();
+    handleEdit = (rowData) => {
         this.setState({
             isModalOpen: true,
             name: rowData['name']
         })
         console.log(rowData);
+    }
+
+    handleDelete = (id) => {
+        this.setState({
+            isModalConfirmation: true
+        })
+        console.log(id);
     }
     //creating tabel data
     tableData(data) {
@@ -45,11 +54,11 @@ export class Division extends Component {
                     className: ''
                 },
                 {
-                    value: <ActionElement id={value['id']} onEditClick={(e) => {this.handleEditClick(e, value)}}/>,
+                    value: <BaseAction onEdit={() => { this.handleEdit(value) }} onDelete={() => { this.handleDelete(value['id']) }} />,
                     className: 'text-center'
                 }
             ];
-    
+
             let tmp = {
                 row: value,
                 data: tmpRowData
@@ -58,13 +67,13 @@ export class Division extends Component {
         });
         return results;
     }
-    
+
     createTableData = () => {
         let data = this.tableData(this.props.division.divisions);
         this.setState({
             data: data
         })
-        
+
     }
     handleSave = async (e) => {
         const data = { name: this.state.name }
@@ -126,6 +135,7 @@ export class Division extends Component {
                         </button>
                     </div>
                 </Modal>
+                <ModalConfirmation isOpen={this.state.isModalConfirmation} message='Konfirmasi?' onRejected={() => { this.setState({ isModalConfirmation: false }) }} />
                 <ModalAlert type='error' isOpen={this.props.division.error} onClose={() => { this.props.resetError() }} message={`internal server error`} />
                 <ModalAlert type='success' isOpen={this.props.division.success} onClose={() => { this.props.resetSuccess() }} message={`success`} />
             </div>
@@ -147,15 +157,6 @@ const tableHeader = [
         className: 'w-3 text-center'
     },
 ]
-
-const ActionElement = ({ id, onEditClick }) => {
-    return (
-        <div className='flex'>
-            <a href='#' data-id={id} className='btn-edit mr-1' onClick={(e) => onEditClick(e)}>Edit</a>
-            <a href='#' data-id={id} className='btn-delete'>Delete</a>
-        </div>
-    )
-}
 
 const mapStateToProps = (state) => ({
     division: state.reducer.division
