@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import Modal from '../modal/modal'
 import ModalAlert from '../modal/alert'
 import Textfield from '../forms/textfield'
@@ -23,27 +23,56 @@ export class Division extends Component {
     }
 
     async componentDidMount() {
-
         await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
         this.createTableData()
     }
 
+    handleEditClick = (e, rowData) => {
+        e.preventDefault();
+        this.setState({
+            isModalOpen: true,
+            name: rowData['name']
+        })
+        console.log(rowData);
+    }
+    //creating tabel data
+    tableData(data) {
+        let results = [];
+        data.forEach(value => {
+            let tmpRowData = [
+                {
+                    value: value['name'],
+                    className: ''
+                },
+                {
+                    value: <ActionElement id={value['id']} onEditClick={(e) => {this.handleEditClick(e, value)}}/>,
+                    className: 'text-center'
+                }
+            ];
+    
+            let tmp = {
+                row: value,
+                data: tmpRowData
+            }
+            results.push(tmp)
+        });
+        return results;
+    }
+    
     createTableData = () => {
-        let data = tableColumns(this.props.division.divisions);
+        let data = this.tableData(this.props.division.divisions);
         this.setState({
             data: data
         })
+        
     }
     handleSave = async (e) => {
-        // const resp = await this.props.getData(AxiosInstance)
-        // console.log(resp);
         const data = { name: this.state.name }
-        const resp = await this.props.createData({
+        await this.props.createData({
             AxiosInstance, data: JSON.stringify(data)
         })
         await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
         this.createTableData()
-        console.log(resp);
         if (this.props.division.success) {
             this.setState({
                 name: ''
@@ -119,27 +148,13 @@ const tableHeader = [
     },
 ]
 
-function tableColumns(data) {
-    let results = [];
-    data.forEach(value => {
-        let tmpRowData = [
-            {
-                value: value['name'],
-                className: ''
-            },
-            {
-                value: (<a href='#'>Edit</a>),
-                className: 'text-center'
-            }
-        ];
-
-        let tmp = {
-            row: value,
-            data: tmpRowData
-        }
-        results.push(tmp)
-    });
-    return results;
+const ActionElement = ({ id, onEditClick }) => {
+    return (
+        <div className='flex'>
+            <a href='#' data-id={id} className='btn-edit mr-1' onClick={(e) => onEditClick(e)}>Edit</a>
+            <a href='#' data-id={id} className='btn-delete'>Delete</a>
+        </div>
+    )
 }
 
 const mapStateToProps = (state) => ({
