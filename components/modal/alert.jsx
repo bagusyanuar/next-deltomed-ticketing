@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import PropTypes from 'prop-types';
 
-function ModalAlert({ isOpen, onClose, message, type }) {
+function ModalAlert({ isOpen, callback, message, type }) {
     const [isShow, setShow] = useState(false)
 
     useEffect(() => {
@@ -31,7 +31,7 @@ function ModalAlert({ isOpen, onClose, message, type }) {
                     <p className='text-gray-600 text-center text-sm mb-5'>{message}</p>
                     <div className='flex justify-center mt-3'>
                         <button
-                            onClick={onClose}
+                            onClick={callback}
                             type='button'
                             className={`flex items-center text-sm ${color} rounded-md py-1 px-4 text-white hover:${hoverColor} transition-colors ease-in duration-200`}
                         >
@@ -46,7 +46,7 @@ function ModalAlert({ isOpen, onClose, message, type }) {
 
 ModalAlert.propTypes = {
     isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func,
+    callback: PropTypes.func,
     message: PropTypes.string,
     type: PropTypes.oneOf(['success', 'error'])
 }

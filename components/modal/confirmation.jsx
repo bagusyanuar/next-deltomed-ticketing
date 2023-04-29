@@ -26,7 +26,7 @@ function ModalConfirmation({ isOpen, onClose, message, onAccepted, onRejected })
                     <p className='text-gray-600 text-center text-sm mb-5'>{message}</p>
                     <div className='flex justify-center mt-3'>
                         <button
-                            onClick={onClose}
+                            onClick={onAccepted}
                             type='button'
                             className={`flex mr-2 items-center text-sm bg-green-500 rounded-md py-1 px-4 text-white hover:bg-green-600 transition-colors ease-in duration-200`}
                         >
