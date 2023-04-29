@@ -162,15 +162,18 @@ export class Division extends Component {
 const tableHeader = [
     {
         value: '#',
-        className: 'w-1 text-center'
+        className: 'w-1 text-center',
+        sort: false
     },
     {
         value: 'Nama',
-        className: ''
+        className: '',
+        sort: true
     },
     {
         value: 'Action',
-        className: 'w-3 text-center'
+        className: 'w-3 text-center',
+        sort: false
     },
 ]
 

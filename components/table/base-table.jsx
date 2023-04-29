@@ -7,6 +7,7 @@ function BaseTable({ headers, column, data, dataKey }) {
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
     const [countPage, setCountPage] = useState(0)
+    const [rowData, setRowData] = useState([])
 
     const handleChangePerpage = (e) => {
         let perPage = parseInt(e.target.value);
@@ -33,16 +34,29 @@ function BaseTable({ headers, column, data, dataKey }) {
             setPage(page - 1);
         }
     }
+
+    const sortData = (key) => {
+        rowData.sort((a, b) => (a['data'][0]['value'] > b['data'][0]['value']) ? 1 : ((b['data'][0]['value'] > a['data'][0]['value']) ? -1 : 0))
+        setRowData(rowData)
+    }
+
+    useEffect(() => {
+      setRowData(data)
+    }, [data])
+    
+
     useEffect(() => {
         console.log('affected');
         let dataLength = data.length;
         let totalPage = Math.ceil(dataLength / perPage);
         setCountPage(totalPage)
+        if (page > totalPage && page > 1) {
+            setPage(totalPage)
+        }
         return () => {
             setCountPage(0)
         }
     }, [perPage, data.length])
-
 
     return (
         <div>
@@ -67,7 +81,15 @@ function BaseTable({ headers, column, data, dataKey }) {
                                 headers.map((v, i) => {
                                     return (
                                         <th key={i} scope="col" className={`px-6 py-3 ${v['className']}`}>
-                                            {v['value']}
+                                            <div className='flex items-center'>
+                                                {v['value']}
+                                                {
+                                                    v['sort'] ? <a href="#" onClick={(e) => { e.preventDefault(); sortData(i) }} >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 ml-1" aria-hidden="true" fill="currentColor" viewBox="0 0 320 512"><path d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224zM292.3 288H27.66c-24.6 0-36.89 29.77-19.54 47.12l132.5 136.8C145.9 477.3 152.1 480 160 480c7.053 0 14.12-2.703 19.53-8.109l132.3-136.8C329.2 317.8 316.9 288 292.3 288z" /></svg>
+                                                    </a> : ''
+                                                }
+
+                                            </div>
                                         </th>
                                     )
                                 })
@@ -76,7 +98,8 @@ function BaseTable({ headers, column, data, dataKey }) {
                     </thead>
                     <tbody>
                         {
-                            data.length > 0 ? data.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
+                            rowData.length > 0 ? rowData.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
+                                console.log(value);
                                 return (
                                     <tr key={index} className='bg-white border-b'>
                                         <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td>
