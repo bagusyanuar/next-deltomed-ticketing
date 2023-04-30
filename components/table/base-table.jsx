@@ -18,7 +18,6 @@ function BaseTable({ headers, column, data, dataKey }) {
         e.preventDefault();
         let targetPage = parseInt(e.target.dataset.page);
         setPage(targetPage)
-        console.log(e.target.dataset.page);
     }
 
     const handleNextPage = (e) => {
