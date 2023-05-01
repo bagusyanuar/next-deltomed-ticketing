@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
 
-function BaseTable({ headers, column, data, dataKey }) {
+function BaseTable({ headers, data, withIndex }) {
 
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
     const [countPage, setCountPage] = useState(0)
-    const [rowData, setRowData] = useState([])
+    const [rowData, setRowData] = useState(data)
 
     const handleChangePerpage = (e) => {
         let perPage = parseInt(e.target.value);
@@ -19,6 +19,12 @@ function BaseTable({ headers, column, data, dataKey }) {
         let targetPage = parseInt(e.target.dataset.page);
         setPage(targetPage)
     }
+
+    useEffect(() => {
+        console.log('asoe');
+        setRowData(data)
+    }, [data])
+
 
     const handleNextPage = (e) => {
         e.preventDefault();
@@ -35,14 +41,14 @@ function BaseTable({ headers, column, data, dataKey }) {
     }
 
     const sortData = (key) => {
-        rowData.sort((a, b) => (a['data'][0]['value'] > b['data'][0]['value']) ? 1 : ((b['data'][0]['value'] > a['data'][0]['value']) ? -1 : 0))
-        setRowData(rowData)
+        let sorted = rowData.sort((a, b) => (a['data'][0] > b['data'][0]) ? 1 : ((b['data'][0] > a['data'][0]) ? -1 : 0))
+        console.log(sorted);
+        setRowData([])
+        setTimeout(() => {
+            setRowData(sorted)
+        }, 1000);
+        
     }
-
-    useEffect(() => {
-      setRowData(data)
-    }, [data])
-    
 
     useEffect(() => {
         console.log('affected');
@@ -77,6 +83,13 @@ function BaseTable({ headers, column, data, dataKey }) {
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
                             {
+                                withIndex ? (<th scope="col" className={`px-6 py-3 w-1 text-center}`}>
+                                    <div className='flex items-center'>
+                                        #
+                                    </div>
+                                </th>) : ''
+                            }
+                            {
                                 headers.map((v, i) => {
                                     return (
                                         <th key={i} scope="col" className={`px-6 py-3 ${v['className']}`}>
@@ -98,14 +111,13 @@ function BaseTable({ headers, column, data, dataKey }) {
                     <tbody>
                         {
                             rowData.length > 0 ? rowData.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
-                                console.log(value);
                                 return (
                                     <tr key={index} className='bg-white border-b'>
-                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td>
+                                        {withIndex ? <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td> : ''}
                                         {
                                             value.data.map((v, i) => {
                                                 return (
-                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap ${v['className']}`}>{v['value']}</td>
+                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap`}>{v}</td>
                                                 )
                                             })
                                         }
@@ -160,8 +172,7 @@ function BaseTable({ headers, column, data, dataKey }) {
 
 BaseTable.propTypes = {
     headers: PropTypes.array,
-    column: PropTypes.array,
     data: PropTypes.array,
-    dataKey: PropTypes.array,
+    withIndex: PropTypes.bool,
 }
 export default BaseTable

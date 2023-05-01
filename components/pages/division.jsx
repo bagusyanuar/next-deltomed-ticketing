@@ -56,16 +56,10 @@ export class Division extends Component {
     //creating tabel data
     tableData(data) {
         let results = [];
-        data.forEach(value => {
+        data.forEach((value, index) => {
             let tmpRowData = [
-                {
-                    value: value['name'],
-                    className: ''
-                },
-                {
-                    value: <BaseAction onEdit={() => { this.handleEdit(value); }} onDelete={() => { this.handleDelete(value['id']) }} />,
-                    className: 'text-center'
-                }
+                value['name'],
+                (<BaseAction key={index} onEdit={() => { this.handleEdit(value); }} onDelete={() => { this.handleDelete(value['id']) }} />),
             ];
 
             let tmp = {
@@ -134,7 +128,7 @@ export class Division extends Component {
                     <div className='px-4 py-4'>
                         <p className='text-gray-600 text-sm'>Data Division</p>
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
-                        <BaseTable headers={this.state.tableHeader} data={this.state.data} />
+                        <BaseTable headers={this.state.tableHeader} withIndex={true} data={this.state.data} />
                     </div>
                 </div>
                 <Modal title='Add Item' isOpen={this.state.isModalOpen} onClose={() => { this.setState({ isModalOpen: false }) }}>
@@ -160,11 +154,6 @@ export class Division extends Component {
 }
 
 const tableHeader = [
-    {
-        value: '#',
-        className: 'w-1 text-center',
-        sort: false
-    },
     {
         value: 'Nama',
         className: '',
