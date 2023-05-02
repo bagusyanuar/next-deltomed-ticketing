@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
 
-function BaseTable({ headers, data, withIndex }) {
+function BaseTable({ headers, data, withIndex, column }) {
 
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
@@ -110,21 +110,22 @@ function BaseTable({ headers, data, withIndex }) {
                     </thead>
                     <tbody>
                         {
-                            rowData.length > 0 ? rowData.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
+                            rowData.map((v, i) => {
                                 return (
-                                    <tr key={index} className='bg-white border-b'>
-                                        {withIndex ? <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td> : ''}
+                                    <tr key={i} className='bg-white border-b'>
+                                        <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{i}</td>
                                         {
-                                            value.data.map((v, i) => {
+                                            headers.map((vH, iH) => {
                                                 return (
-                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap`}>{v}</td>
+                                                    <td key={iH}>{column[iH]['render'](v)}</td>
                                                 )
                                             })
                                         }
                                     </tr>
                                 )
-                            }) : <EmptyRecord countHeaders={withIndex ? (headers.length + 1) : headers.length} />
+                            })
                         }
+
 
                     </tbody>
                 </table>
@@ -196,3 +197,20 @@ BaseTable.propTypes = {
     withIndex: PropTypes.bool,
 }
 export default BaseTable
+
+{/* {
+                            rowData.length > 0 ? rowData.slice(((page - 1) * perPage), (page * perPage)).map((value, index) => {
+                                return (
+                                    <tr key={index} className='bg-white border-b'>
+                                        {withIndex ? <td className={`px-6 py-3 text-gray-500 whitespace-nowrap w-1`}>{((index + 1) + ((page - 1) * perPage))}</td> : ''}
+                                        {
+                                            value.data.map((v, i) => {
+                                                return (
+                                                    <td key={i} className={`px-6 py-3 text-gray-500 whitespace-nowrap`}>{v}</td>
+                                                )
+                                            })
+                                        }
+                                    </tr>
+                                )
+                            }) : <EmptyRecord countHeaders={withIndex ? (headers.length + 1) : headers.length} />
+                        } */}

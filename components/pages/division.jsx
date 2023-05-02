@@ -26,6 +26,7 @@ export class Division extends Component {
             name: '',
             data: [],
             tableHeader: tableHeader,
+            tableColumn: [],
             typeCreate: 'create'
         }
     }
@@ -75,7 +76,8 @@ export class Division extends Component {
     createTableData = () => {
         let data = this.tableData(this.props.division.divisions);
         this.setState({
-            data: data
+            data: data,
+            tableColumn: column(this)
         })
 
     }
@@ -129,7 +131,7 @@ export class Division extends Component {
                     <div className='px-4 py-4'>
                         <p className='text-gray-600 text-sm'>Data Division</p>
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
-                        <BaseTable headers={this.state.tableHeader} withIndex={true} data={[]} />
+                        <BaseTable headers={this.state.tableHeader} withIndex={true} data={this.props.division.divisions} column={this.state.tableColumn} />
                     </div>
                 </div>
                 <Modal title='Add Item' isOpen={this.state.isModalOpen} onClose={() => { this.setState({ isModalOpen: false }) }}>
@@ -166,6 +168,21 @@ const tableHeader = [
         // sort: false
     },
 ]
+
+const column = (myClass) => [
+    {
+        render: function (data) {
+            return data['created_at']
+        }
+    },
+    {
+        render: function (data) {
+            // console.log(data);
+            return (<BaseAction onEdit={() => { myClass.handleEdit(data) }} />)
+            // console.log(data);
+        }
+    },
+];
 
 const mapStateToProps = (state) => ({
     division: state.reducer.division
