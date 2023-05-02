@@ -7,7 +7,8 @@ function BaseTable({ headers, data, withIndex }) {
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
     const [countPage, setCountPage] = useState(0)
-    const [rowData, setRowData] = useState(data)
+    const [rowData, setRowData] = useState([])
+    const [sort, setSort] = useState('ASC')
 
     const handleChangePerpage = (e) => {
         let perPage = parseInt(e.target.value);
@@ -21,7 +22,7 @@ function BaseTable({ headers, data, withIndex }) {
     }
 
     useEffect(() => {
-        console.log('asoe');
+        console.log('data changed');
         setRowData(data)
     }, [data])
 
@@ -41,17 +42,26 @@ function BaseTable({ headers, data, withIndex }) {
     }
 
     const sortData = (key) => {
-        let sorted = rowData.sort((a, b) => (a['data'][0] > b['data'][0]) ? 1 : ((b['data'][0] > a['data'][0]) ? -1 : 0))
-        console.log(sorted);
-        setRowData([])
-        setTimeout(() => {
-            setRowData(sorted)
-        }, 1000);
-        
+        console.log(key);
+        // if (sort === 'ASC') {
+        //     setSort('DESC')
+        // } else {
+        //     setSort('ASC')
+        // }
+        // let d = [...rowData]
+        // let sorted = [];
+
+        // if (sort === 'DESC') {
+        //     sorted = d.sort((a, b) => (a['data'][key] < b['data'][key]) ? 1 : ((b['data'][key] > a['data'][key]) ? -1 : 0))
+        // } else {
+        //     sorted = d.sort((a, b) => (a['data'][key] > b['data'][key]) ? 1 : ((b['data'][key] > a['data'][key]) ? -1 : 0))
+        // }
+        // setRowData(sorted)
     }
 
+
     useEffect(() => {
-        console.log('affected');
+        console.log('paging changed');
         let dataLength = data.length;
         let totalPage = Math.ceil(dataLength / perPage);
         setCountPage(totalPage)
@@ -83,7 +93,7 @@ function BaseTable({ headers, data, withIndex }) {
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
                             {
-                                withIndex ? (<th scope="col" className={`px-6 py-3 w-1 text-center}`}>
+                                withIndex ? (<th scope="col" className={`px-6 py-3 w-1 text-center`}>
                                     <div className='flex items-center'>
                                         #
                                     </div>
@@ -92,17 +102,7 @@ function BaseTable({ headers, data, withIndex }) {
                             {
                                 headers.map((v, i) => {
                                     return (
-                                        <th key={i} scope="col" className={`px-6 py-3 ${v['className']}`}>
-                                            <div className='flex items-center'>
-                                                {v['value']}
-                                                {
-                                                    v['sort'] ? <a href="#" onClick={(e) => { e.preventDefault(); sortData(i) }} >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 ml-1" aria-hidden="true" fill="currentColor" viewBox="0 0 320 512"><path d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224zM292.3 288H27.66c-24.6 0-36.89 29.77-19.54 47.12l132.5 136.8C145.9 477.3 152.1 480 160 480c7.053 0 14.12-2.703 19.53-8.109l132.3-136.8C329.2 317.8 316.9 288 292.3 288z" /></svg>
-                                                    </a> : ''
-                                                }
-
-                                            </div>
-                                        </th>
+                                        <Header key={i} title={v['value']} className={v['className']} sort={v['sort']} onSort={() => { sortData(i) }} />
                                     )
                                 })
                             }
@@ -122,10 +122,8 @@ function BaseTable({ headers, data, withIndex }) {
                                             })
                                         }
                                     </tr>
-                                );
-                            }) : <tr>
-                                <td colSpan={headers.length} className='text-center px-6 py-3 text-gray-500 whitespace-nowrap'>No Record</td>
-                            </tr>
+                                )
+                            }) : <EmptyRecord countHeaders={withIndex ? (headers.length + 1) : headers.length} />
                         }
 
                     </tbody>
@@ -170,6 +168,28 @@ function BaseTable({ headers, data, withIndex }) {
     )
 }
 
+const EmptyRecord = ({ countHeaders }) => {
+    return (
+        <tr>
+            <td colSpan={countHeaders} className='text-center px-6 py-3 text-gray-500 whitespace-nowrap'>No Record</td>
+        </tr>
+    )
+}
+
+const Header = ({ title, className, sort, onSort }) => {
+    return (
+        <th scope="col" className={`px-6 py-3 ${className}`}>
+            <div className={`flex items-center`}>
+                <span>{title}</span>
+                {
+                    sort ? <a href="#" onClick={(e) => { e.preventDefault(); onSort() }} >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 ml-1 opacity-75" aria-hidden="true" fill="currentColor" viewBox="0 0 320 512"><path d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224zM292.3 288H27.66c-24.6 0-36.89 29.77-19.54 47.12l132.5 136.8C145.9 477.3 152.1 480 160 480c7.053 0 14.12-2.703 19.53-8.109l132.3-136.8C329.2 317.8 316.9 288 292.3 288z" /></svg>
+                    </a> : ''
+                }
+            </div>
+        </th>
+    )
+}
 BaseTable.propTypes = {
     headers: PropTypes.array,
     data: PropTypes.array,

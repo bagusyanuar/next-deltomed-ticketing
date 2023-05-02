@@ -53,6 +53,7 @@ export class Division extends Component {
         })
         console.log(id);
     }
+
     //creating tabel data
     tableData(data) {
         let results = [];
@@ -128,7 +129,7 @@ export class Division extends Component {
                     <div className='px-4 py-4'>
                         <p className='text-gray-600 text-sm'>Data Division</p>
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
-                        <BaseTable headers={this.state.tableHeader} withIndex={true} data={this.state.data} />
+                        <BaseTable headers={this.state.tableHeader} withIndex={true} data={[]} />
                     </div>
                 </div>
                 <Modal title='Add Item' isOpen={this.state.isModalOpen} onClose={() => { this.setState({ isModalOpen: false }) }}>
@@ -162,7 +163,7 @@ const tableHeader = [
     {
         value: 'Action',
         className: 'w-3 text-center',
-        sort: false
+        // sort: false
     },
 ]
 
