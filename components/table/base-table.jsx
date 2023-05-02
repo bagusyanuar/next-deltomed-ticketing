@@ -1,8 +1,11 @@
 
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
+import { ConverDotNested } from '../../lib/helper'
+import TableBody from './body'
 
 function BaseTable({ headers, data, withIndex, column }) {
+    console.log('rendered');
 
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
@@ -21,10 +24,30 @@ function BaseTable({ headers, data, withIndex, column }) {
         setPage(targetPage)
     }
 
-    useEffect(() => {
-        console.log('data changed');
-        setRowData(data)
-    }, [data])
+
+    // useEffect(() => {
+    //     console.log('data changed');
+    //     setRowData(data)
+    // }, [data])
+
+    // useEffect(() => {
+    //     let results = [];
+    //     data.forEach((value, index) => {
+    //         let tmpRowData = [
+    //             ConverDotNested(value, column[0]['value']),
+    //             ConverDotNested(value, column[1]['value']),
+    //         ];
+
+    //         let tmp = {
+    //             row: value,
+    //             data: tmpRowData
+    //         }
+    //         results.push(tmp)
+    //     });
+    //     console.log(results);
+    //     setRowData(results)
+    // }, [column])
+    
 
 
     const handleNextPage = (e) => {
@@ -60,24 +83,24 @@ function BaseTable({ headers, data, withIndex, column }) {
     }
 
 
-    useEffect(() => {
-        console.log('paging changed');
-        let dataLength = data.length;
-        let totalPage = Math.ceil(dataLength / perPage);
-        setCountPage(totalPage)
-        if (page > totalPage && page > 1) {
-            setPage(totalPage)
-        }
-        return () => {
-            setCountPage(0)
-        }
-    }, [perPage, data.length])
+    // useEffect(() => {
+    //     console.log('paging changed');
+    //     let dataLength = data.length;
+    //     let totalPage = Math.ceil(dataLength / perPage);
+    //     setCountPage(totalPage)
+    //     if (page > totalPage && page > 1) {
+    //         setPage(totalPage)
+    //     }
+    //     return () => {
+    //         setCountPage(0)
+    //     }
+    // }, [perPage, data.length])
 
     return (
         <div>
 
             {/* per page section */}
-            <div className='flex items-center mb-3'>
+            {/* <div className='flex items-center mb-3'>
                 <span className='text-sm text-slate-600 me-2'>Show :</span>
                 <select onChange={handleChangePerpage} id='page_length' className='px-3 py-1 rounded-md border bg-inherit text-sm text-slate-600'>
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={5}>5</option>
@@ -85,14 +108,14 @@ function BaseTable({ headers, data, withIndex, column }) {
                     <option className='bg-white text-slate-600 hover:bg-slate-200' value={25}>25</option>
                 </select>
                 <span className='text-sm text-slate-600 ms-2'>entries</span>
-            </div>
+            </div> */}
 
             {/* main table section */}
             <div className='relative overflow-x-auto shadow-md sm:rounded-lg border border-slate-200 mb-2'>
                 <table className='rounded-md w-full text-sm text-left text-gray-500 dark:text-gray-400'>
                     <thead className="text-sm text-slate-600 bg-gray-50">
                         <tr>
-                            {
+                            {/* {
                                 withIndex ? (<th scope="col" className={`px-6 py-3 w-1 text-center`}>
                                     <div className='flex items-center'>
                                         #
@@ -105,11 +128,12 @@ function BaseTable({ headers, data, withIndex, column }) {
                                         <Header key={i} title={v['value']} className={v['className']} sort={v['sort']} onSort={() => { sortData(i) }} />
                                     )
                                 })
-                            }
+                            } */}
                         </tr>
                     </thead>
                     <tbody>
-                        {
+                        <TableBody />
+                        {/* {
                             rowData.map((v, i) => {
                                 return (
                                     <tr key={i} className='bg-white border-b'>
@@ -117,14 +141,18 @@ function BaseTable({ headers, data, withIndex, column }) {
                                         {
                                             headers.map((vH, iH) => {
                                                 return (
-                                                    <td key={iH}>{column[iH]['render'](v)}</td>
+                                                    <td key={iH} className={`px-6 py-3 text-gray-500 whitespace-nowrap`}>
+                                                        {v['data'][iH]}
+                                                        {column[iH]['render'](v)}
+                                                        {ConverDotNested(v, column[iH]['value'])}
+                                                    </td>
                                                 )
                                             })
                                         }
                                     </tr>
                                 )
                             })
-                        }
+                        } */}
 
 
                     </tbody>
@@ -132,7 +160,7 @@ function BaseTable({ headers, data, withIndex, column }) {
             </div>
 
             {/* pagination section */}
-            <nav className='flex items-center justify-between pt-4'>
+            {/* <nav className='flex items-center justify-between pt-4'>
                 {
                     data.length > 0 ? <span className='text-sm text-slate-600 '>Showing <span className='font-semibold'>{((page - 1) * perPage) + 1}-{(((page - 1) * perPage) + perPage) > data.length ? data.length : (((page - 1) * perPage) + perPage)}</span> of <span className='font-semibold'>{data.length}</span>
                     </span> : <span className='text-sm text-slate-600 '>Showing Empty Record</span>
@@ -164,7 +192,7 @@ function BaseTable({ headers, data, withIndex, column }) {
                         </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> */}
         </div>
     )
 }
@@ -178,6 +206,7 @@ const EmptyRecord = ({ countHeaders }) => {
 }
 
 const Header = ({ title, className, sort, onSort }) => {
+    console.log('header');
     return (
         <th scope="col" className={`px-6 py-3 ${className}`}>
             <div className={`flex items-center`}>
@@ -191,6 +220,7 @@ const Header = ({ title, className, sort, onSort }) => {
         </th>
     )
 }
+
 BaseTable.propTypes = {
     headers: PropTypes.array,
     data: PropTypes.array,

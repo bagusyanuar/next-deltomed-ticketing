@@ -32,94 +32,110 @@ export class Division extends Component {
     }
 
     async componentDidMount() {
+        console.log('mount');
         await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
-        this.createTableData()
+        // this.createTableData()
     }
 
     handleEdit = (rowData) => {
-        this.setState({
-            isModalOpen: true,
-            name: rowData['name'],
-            id: rowData['id'],
-            typeCreate: 'patch'
-        })
-        console.log(rowData);
+        console.log('handle edit');
+        // this.setState({
+        //     isModalOpen: true,
+        //     name: rowData['name'],
+        //     id: rowData['id'],
+        //     typeCreate: 'patch'
+        // })
+        // console.log(rowData);
     }
 
     handleDelete = (id) => {
-        this.setState({
-            isModalConfirmation: true,
-            id: id,
-            typeCreate: 'delete'
-        })
+        console.log('handle delete');
+        // this.setState({
+        //     isModalConfirmation: true,
+        //     id: id,
+        //     typeCreate: 'delete'
+        // })
         console.log(id);
     }
 
     //creating tabel data
-    tableData(data) {
-        let results = [];
-        data.forEach((value, index) => {
-            let tmpRowData = [
-                value['name'],
-                (<BaseAction key={index} onEdit={() => { this.handleEdit(value); }} onDelete={() => { this.handleDelete(value['id']) }} />),
-            ];
+    // tableData(data) {
+    //     console.log('table data');
+    //     let results = [];
+    //     data.forEach((value, index) => {
+    //         let tmpRowData = [
+    //             value['name'],
+    //             (<BaseAction key={index} onEdit={() => { this.handleEdit(value); }} onDelete={() => { this.handleDelete(value['id']) }} />),
+    //         ];
 
-            let tmp = {
-                row: value,
-                data: tmpRowData
-            }
-            results.push(tmp)
-        });
-        return results;
-    }
+    //         let tmp = {
+    //             row: value,
+    //             data: tmpRowData
+    //         }
+    //         results.push(tmp)
+    //     });
+    //     return results;
+    // }
 
     createTableData = () => {
-        let data = this.tableData(this.props.division.divisions);
-        this.setState({
-            data: data,
-            tableColumn: column(this)
-        })
+        console.log('create table data');
+        // let data = this.tableData(this.props.division.divisions);
+        // this.setState({
+        //     data: data,
+        //     tableColumn: [
+        //         {
+        //             value: 'name'
+        //         },
+        //         {
+        //             value: 'created_at'
+        //         }
+        //     ]
+        // })
 
     }
 
     handleSave = async (e) => {
-        const data = { name: this.state.name }
-        if (this.state.typeCreate === 'patch') {
-            await this.props.patchData({
-                AxiosInstance, id: this.state.id, data: JSON.stringify(data)
-            })
-        } else {
-            await this.props.createData({
-                AxiosInstance, data: JSON.stringify(data)
-            })
-        }
+        console.log('handle save');
+        // const data = { name: this.state.name }
+        // if (this.state.typeCreate === 'patch') {
+        //     await this.props.patchData({
+        //         AxiosInstance, id: this.state.id, data: JSON.stringify(data)
+        //     })
+        // } else {
+        //     await this.props.createData({
+        //         AxiosInstance, data: JSON.stringify(data)
+        //     })
+        // }
     }
 
     deleteData = async (e) => {
-        this.setState({
-            isModalConfirmation: false
-        })
-        await this.props.deleteData({ AxiosInstance, id: this.state.id })
+        console.log('delete data');
+        // this.setState({
+        //     isModalConfirmation: false
+        // })
+        // await this.props.deleteData({ AxiosInstance, id: this.state.id })
     }
 
     onSuccessCallback = async () => {
-        this.props.resetSuccess()
-        await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
-        this.createTableData()
-        this.setState({
-            name: '',
-            id: '',
-            isModalOpen: this.state.typeCreate === 'create' ? true : false
-        })
+        console.log('callback');
+        // this.props.resetSuccess()
+        // await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
+        // this.createTableData()
+        // this.setState({
+        //     name: '',
+        //     id: '',
+        //     isModalOpen: this.state.typeCreate === 'create' ? true : false
+        // })
     }
 
     render() {
+        console.log('rendered');
         return (
             <div>
                 <div className='flex items-center justify-between'>
                     <div className='breadcrumb'>
                     </div>
-                    <BaseButton onClick={() => { this.setState({ isModalOpen: true, typeCreate: 'create' }) }}>
+                    <BaseButton onClick={() => { this.setState({ isModalOpen: true, typeCreate: 'create' }); }}>
                         <span className="material-symbols-outlined me-2">
                             add_circle
                         </span>
@@ -131,7 +147,18 @@ export class Division extends Component {
                     <div className='px-4 py-4'>
                         <p className='text-gray-600 text-sm'>Data Division</p>
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
-                        <BaseTable headers={this.state.tableHeader} withIndex={true} data={this.props.division.divisions} column={this.state.tableColumn} />
+                        <BaseTable
+                            headers={this.state.tableHeader}
+                            withIndex={true}
+                            data={this.props.division.divisions}
+                            column={[
+                                {
+                                    value: 'name'
+                                },
+                                {
+                                    value: 'created_at'
+                                }
+                            ]} />
                     </div>
                 </div>
                 <Modal title='Add Item' isOpen={this.state.isModalOpen} onClose={() => { this.setState({ isModalOpen: false }) }}>
@@ -169,19 +196,25 @@ const tableHeader = [
     },
 ]
 
-const column = (myClass) => [
+const column = () => [
     {
-        render: function (data) {
-            return data['created_at']
-        }
+        value: 'name'
     },
     {
-        render: function (data) {
-            // console.log(data);
-            return (<BaseAction onEdit={() => { myClass.handleEdit(data) }} />)
-            // console.log(data);
-        }
-    },
+        value: 'created_at'
+    }
+    // {
+    //     render: function (data) {
+    //         return data['name']
+    //     }
+    // },
+    // {
+    //     render: function (data) {
+    //         // console.log(data);
+    //         return (<BaseAction onEdit={() => { myClass.handleEdit(data) }} />)
+    //         // console.log(data);
+    //     }
+    // },
 ];
 
 const mapStateToProps = (state) => ({
