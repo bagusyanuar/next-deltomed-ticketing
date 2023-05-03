@@ -151,12 +151,19 @@ export class Division extends Component {
                             headers={this.state.tableHeader}
                             withIndex={true}
                             data={this.props.division.divisions}
+                            pagination={true}
                             column={[
                                 {
-                                    value: 'name'
+                                    value: 'name',
+                                    // render: function (data) {
+                                    //     return (<a href='#'>{data['name']}</a>)
+                                    // }
                                 },
                                 {
-                                    value: 'created_at'
+                                    value: null,
+                                    render: function (data) {
+                                        return <BaseAction />
+                                    }
                                 }
                             ]} />
                     </div>
