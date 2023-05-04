@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { ConverDotNested } from '../../lib/helper'
+import { TransformToDatatable, DatatableSort } from '../../lib/helper'
 import TableBody from './body'
 import TableHeader from './header'
 import TablePagination, { PageLength } from './pagination'
 
-function BaseTable({ headers, data, withIndex, column, pagination }) {
-    console.log('rendered');
+function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
 
     const [perPage, setPerPage] = useState(5)
     const [page, setPage] = useState(1)
@@ -21,46 +20,23 @@ function BaseTable({ headers, data, withIndex, column, pagination }) {
     }
 
     const handleChangePage = (page) => {
-        // e.preventDefault();
-        // let targetPage = parseInt(e.target.dataset.page);
         console.log(page);
         setPage(page)
     }
 
 
     useEffect(() => {
-        let results = [];
-        data.forEach((v, i) => {
-            let row = [];
-            column.forEach((vH, iH) => {
-                let tmp = ''
-                if (vH['value'] !== null && vH['value'] !== undefined) {
-                    tmp = ConverDotNested(v, vH['value'])
-                } else {
-                    if (vH['render'] !== undefined) {
-                        tmp = vH['render'](v)
-                    }
-                }
-                row.push(tmp)
-            })
-            let result = {
-                original: v,
-                row: row
-            }
-            results.push(result)
-        });
+        let results = TransformToDatatable(data, column)
         setRowData(results)
     }, [data, column])
 
     const handleNextPage = (e) => {
-        // e.preventDefault();
         if (page < countPage) {
             setPage(page + 1);
         }
     }
 
     const handlePreviousPage = (e) => {
-        // e.preventDefault();
         if (page > 1) {
             setPage(page - 1);
         }
@@ -72,23 +48,30 @@ function BaseTable({ headers, data, withIndex, column, pagination }) {
         } else {
             setSort('ASC')
         }
-        let d = [...rowData]
-        let sorted = [];
+        // let d = [...rowData]
+        // let sorted = [];
 
-        if (sort === 'DESC') {
-            sorted = d.sort((a, b) => (a['row'][key] < b['row'][key]) ? 1 : ((b['row'][key] > a['row'][key]) ? -1 : 0))
-        } else {
-            sorted = d.sort((a, b) => (a['row'][key] > b['row'][key]) ? 1 : ((b['row'][key] > a['row'][key]) ? -1 : 0))
+        // if (sort === 'DESC') {
+        //     sorted = d.sort((a, b) => (a['row'][key] < b['row'][key]) ? 1 : ((b['row'][key] > a['row'][key]) ? -1 : 0))
+        // } else {
+        //     sorted = d.sort((a, b) => (a['row'][key] > b['row'][key]) ? 1 : ((b['row'][key] > a['row'][key]) ? -1 : 0))
+        // }
+        // setRowData(sorted)
+        let sorted = DatatableSort(rowData, key, sort)
+        if (onSorted !== undefined && typeof onSorted === 'function') {
+            let dataSorted = []
+            sorted.forEach(v => {
+                dataSorted.push(v['original'])
+            });
+            onSorted(dataSorted)
         }
-        setRowData(sorted)
     }
 
 
     useEffect(() => {
         console.log('paging changed');
         if (pagination) {
-            let dataLength = data.length;
-            let totalPage = Math.ceil(dataLength / perPage);
+            let totalPage = Math.ceil(data.length / perPage);
             setCountPage(totalPage)
             if (page > totalPage && page > 1) {
                 setPage(totalPage)
@@ -113,7 +96,7 @@ function BaseTable({ headers, data, withIndex, column, pagination }) {
             {/* main table section */}
             <div className='relative overflow-x-auto shadow-md sm:rounded-lg border border-slate-200 mb-2'>
                 <table className='rounded-md w-full text-sm text-left text-gray-500 dark:text-gray-400'>
-                    <TableHeader headers={headers} withIndex={withIndex} onSort={(key) => { sortData(key) }} />
+                    <TableHeader headers={headers} withIndex={withIndex} onSort={(key) => { sortData(key); }} />
                     <TableBody data={rowData} headers={headers} withIndex={withIndex} pagination={pagination} page={page} perPage={perPage} />
                 </table>
             </div>
@@ -142,6 +125,7 @@ BaseTable.propTypes = {
     column: PropTypes.array,
     withIndex: PropTypes.bool,
     pagination: PropTypes.bool,
+    onSorted: PropTypes.func,
 }
 export default BaseTable
 

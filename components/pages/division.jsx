@@ -11,7 +11,7 @@ import BaseAction from '../table/base-action';
 import { AxiosInstance } from '../../lib/api'
 
 import { connect } from 'react-redux'
-import { getData, createData, patchData, deleteData, resetError, resetSuccess } from '../../redux/features/divisionSlice'
+import { getData, createData, patchData, deleteData, resetError, resetSuccess, sortData } from '../../redux/features/divisionSlice'
 
 
 export class Division extends Component {
@@ -27,8 +27,9 @@ export class Division extends Component {
             data: [],
             tableHeader: tableHeader,
             tableColumn: [],
-            typeCreate: 'create'
+            typeCreate: 'create',
         }
+        this.renderAction = this.renderAction.bind(this)
     }
 
     async componentDidMount() {
@@ -37,8 +38,15 @@ export class Division extends Component {
         // this.createTableData()
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // if (nextState.isModalConfirmation === true) {
+        //     return false
+        // }
+        return true
+    }
+
     handleEdit = (rowData) => {
-        console.log('handle edit');
+        console.log(rowData);
         // this.setState({
         //     isModalOpen: true,
         //     name: rowData['name'],
@@ -50,32 +58,13 @@ export class Division extends Component {
 
     handleDelete = (id) => {
         console.log('handle delete');
-        // this.setState({
-        //     isModalConfirmation: true,
-        //     id: id,
-        //     typeCreate: 'delete'
-        // })
+        this.setState({
+            isModalConfirmation: true,
+            id: id,
+            typeCreate: 'delete'
+        })
         console.log(id);
     }
-
-    //creating tabel data
-    // tableData(data) {
-    //     console.log('table data');
-    //     let results = [];
-    //     data.forEach((value, index) => {
-    //         let tmpRowData = [
-    //             value['name'],
-    //             (<BaseAction key={index} onEdit={() => { this.handleEdit(value); }} onDelete={() => { this.handleDelete(value['id']) }} />),
-    //         ];
-
-    //         let tmp = {
-    //             row: value,
-    //             data: tmpRowData
-    //         }
-    //         results.push(tmp)
-    //     });
-    //     return results;
-    // }
 
     createTableData = () => {
         console.log('create table data');
@@ -110,24 +99,27 @@ export class Division extends Component {
 
     deleteData = async (e) => {
         console.log('delete data');
-        // this.setState({
-        //     isModalConfirmation: false
-        // })
-        // await this.props.deleteData({ AxiosInstance, id: this.state.id })
+        this.setState({
+            isModalConfirmation: false
+        })
+        await this.props.deleteData({ AxiosInstance, id: this.state.id })
     }
 
     onSuccessCallback = async () => {
         console.log('callback');
-        // this.props.resetSuccess()
-        // await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
-        // this.createTableData()
-        // this.setState({
-        //     name: '',
-        //     id: '',
-        //     isModalOpen: this.state.typeCreate === 'create' ? true : false
-        // })
+        this.props.resetSuccess()
+        await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
+        this.createTableData()
+        this.setState({
+            name: '',
+            id: '',
+            isModalOpen: this.state.typeCreate === 'create' ? true : false
+        })
     }
 
+    renderAction = (data) => {
+        return <BaseAction onEdit={() => { this.handleEdit(data) }} onDelete={() => this.handleDelete(data['id'])} />
+    }
     render() {
         console.log('rendered');
         return (
@@ -152,6 +144,7 @@ export class Division extends Component {
                             withIndex={true}
                             data={this.props.division.divisions}
                             pagination={true}
+                            onSorted={(data) => {console.log(data); this.props.sortData(data)}}
                             column={[
                                 {
                                     value: 'name',
@@ -161,9 +154,7 @@ export class Division extends Component {
                                 },
                                 {
                                     value: null,
-                                    render: function (data) {
-                                        return <BaseAction />
-                                    }
+                                    render: this.renderAction
                                 }
                             ]} />
                     </div>
@@ -228,7 +219,7 @@ const mapStateToProps = (state) => ({
     division: state.reducer.division
 })
 
-const mapDispatchToProps = { getData, createData, patchData, deleteData, resetError, resetSuccess }
+const mapDispatchToProps = { getData, createData, patchData, deleteData, resetError, resetSuccess, sortData }
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Division)

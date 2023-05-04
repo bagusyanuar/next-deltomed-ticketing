@@ -75,6 +75,9 @@ const divisionSlice = createSlice({
         },
         resetSuccess: (state) => {
             state.success = false
+        },
+        sortData: (state, { payload }) => {
+            state.divisions = payload
         }
     },
     extraReducers: (builder) => {
@@ -149,6 +152,6 @@ const divisionSlice = createSlice({
     }
 })
 
-export const { resetError, resetSuccess } = divisionSlice.actions
+export const { resetError, resetSuccess, sortData } = divisionSlice.actions
 
 export default divisionSlice.reducer;
