@@ -141,16 +141,14 @@ export class Division extends Component {
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
                         <BaseTable
                             headers={this.state.tableHeader}
+                            pageLength={[5, 10, 25]}
                             withIndex={true}
                             data={this.props.division.divisions}
                             pagination={true}
-                            onSorted={(data) => {console.log(data); this.props.sortData(data)}}
+                            onSorted={(data) => {this.props.sortData(data)}}
                             column={[
                                 {
                                     value: 'name',
-                                    // render: function (data) {
-                                    //     return (<a href='#'>{data['name']}</a>)
-                                    // }
                                 },
                                 {
                                     value: null,

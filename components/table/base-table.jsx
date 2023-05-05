@@ -6,9 +6,9 @@ import TableBody from './body'
 import TableHeader from './header'
 import TablePagination, { PageLength } from './pagination'
 
-function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
+function BaseTable({ headers, data, withIndex, column, pagination, onSorted, pageLength }) {
 
-    const [perPage, setPerPage] = useState(5)
+    const [perPage, setPerPage] = useState(pageLength[0])
     const [page, setPage] = useState(1)
     const [countPage, setCountPage] = useState(0)
     const [rowData, setRowData] = useState([])
@@ -20,7 +20,6 @@ function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
     }
 
     const handleChangePage = (page) => {
-        console.log(page);
         setPage(page)
     }
 
@@ -30,6 +29,9 @@ function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
         setRowData(results)
     }, [data, column])
 
+    const handleFirstPage = (e) => {
+        setPage(1)
+    }
     const handleNextPage = (e) => {
         if (page < countPage) {
             setPage(page + 1);
@@ -40,6 +42,10 @@ function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
         if (page > 1) {
             setPage(page - 1);
         }
+    }
+
+    const handleLastPage = () => {
+        setPage(countPage)
     }
 
     const sortData = (key) => {
@@ -88,7 +94,7 @@ function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
 
             {/* per page section */}
             {
-                pagination ? <PageLength onChange={(e) => { handleChangePerpage(e) }} /> : ''
+                pagination ? <PageLength pageLength={pageLength} onChange={(e) => { handleChangePerpage(e) }} /> : ''
             }
 
 
@@ -111,6 +117,8 @@ function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
                     onPageChange={(p) => { handleChangePage(p) }}
                     onNextPage={() => handleNextPage()}
                     onPrevoiusPage={() => handlePreviousPage()}
+                    onFirstPage={() => handleFirstPage()}
+                    onLastPage={() => handleLastPage()}
                 /> : ''
             }
 
@@ -119,13 +127,22 @@ function BaseTable({ headers, data, withIndex, column, pagination, onSorted }) {
     )
 }
 
+BaseTable.defaultProps = {
+    withIndex: false,
+    pagination: true,
+    pageLength: [5, 10, 25],
+    onSorted: function (data) {
+        
+    }
+}
 BaseTable.propTypes = {
-    headers: PropTypes.array,
-    data: PropTypes.array,
-    column: PropTypes.array,
+    headers: PropTypes.array.isRequired,
+    data: PropTypes.array.isRequired,
+    column: PropTypes.array.isRequired,
     withIndex: PropTypes.bool,
     pagination: PropTypes.bool,
     onSorted: PropTypes.func,
+    pageLength: PropTypes.array,
 }
 export default BaseTable
 
