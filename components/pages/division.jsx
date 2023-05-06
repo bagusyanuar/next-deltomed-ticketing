@@ -6,8 +6,8 @@ import BlockLoader from '../loader/block'
 import Textfield from '../forms/textfield'
 import BaseButton from '../forms/button'
 import ButtonWithLoading from '../forms/button/with-loading'
-import BaseTable from '../table/base-table'
-import BaseAction from '../table/base-action';
+import TableClient from '../table/client'
+import TableAction from '../table/components/action';
 import { AxiosInstance } from '../../lib/api'
 
 import { connect } from 'react-redux'
@@ -25,35 +25,90 @@ export class Division extends Component {
             id: '',
             name: '',
             data: [],
-            tableHeader: tableHeader,
+            tableHeader: [],
             tableColumn: [],
             typeCreate: 'create',
         }
         this.renderAction = this.renderAction.bind(this)
     }
 
-    async componentDidMount() {
-        console.log('mount');
-        await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
-        // this.createTableData()
+    renderAction = (data) => {
+        return <TableAction onEdit={() => { this.handleEdit(data) }} onDelete={() => this.handleDelete(data['id'])} />
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        // if (nextState.isModalConfirmation === true) {
-        //     return false
-        // }
-        return true
+    async componentDidMount() {
+        this.setState({
+            tableHeader: [
+                {
+                    value: 'Nama',
+                    className: '',
+                    sort: true
+                },
+                {
+                    value: 'Nama',
+                    className: '',
+                    sort: true
+                },
+                {
+                    value: 'Nama',
+                    className: '',
+                    sort: true
+                },
+                {
+                    value: 'Nama',
+                    className: '',
+                    sort: true
+                },
+                {
+                    value: 'Nama',
+                    className: '',
+                    sort: true
+                },
+                {
+                    value: 'Nama',
+                    className: '',
+                    sort: true
+                },
+                {
+                    value: 'Action',
+                    className: 'w-3 text-center',
+                },
+            ],
+            tableColumn: [
+                {
+                    value: 'name',
+                },
+                {
+                    value: 'name',
+                },
+                {
+                    value: 'name',
+                },
+                {
+                    value: 'name',
+                },
+                {
+                    value: 'name',
+                },
+                {
+                    value: 'name',
+                },
+                {
+                    value: null,
+                    render: this.renderAction
+                }
+            ]
+        })
+        await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
     }
 
     handleEdit = (rowData) => {
-        console.log(rowData);
-        // this.setState({
-        //     isModalOpen: true,
-        //     name: rowData['name'],
-        //     id: rowData['id'],
-        //     typeCreate: 'patch'
-        // })
-        // console.log(rowData);
+        this.setState({
+            isModalOpen: true,
+            name: rowData['name'],
+            id: rowData['id'],
+            typeCreate: 'patch'
+        })
     }
 
     handleDelete = (id) => {
@@ -66,39 +121,20 @@ export class Division extends Component {
         console.log(id);
     }
 
-    createTableData = () => {
-        console.log('create table data');
-        // let data = this.tableData(this.props.division.divisions);
-        // this.setState({
-        //     data: data,
-        //     tableColumn: [
-        //         {
-        //             value: 'name'
-        //         },
-        //         {
-        //             value: 'created_at'
-        //         }
-        //     ]
-        // })
-
-    }
-
     handleSave = async (e) => {
-        console.log('handle save');
-        // const data = { name: this.state.name }
-        // if (this.state.typeCreate === 'patch') {
-        //     await this.props.patchData({
-        //         AxiosInstance, id: this.state.id, data: JSON.stringify(data)
-        //     })
-        // } else {
-        //     await this.props.createData({
-        //         AxiosInstance, data: JSON.stringify(data)
-        //     })
-        // }
+        const data = { name: this.state.name }
+        if (this.state.typeCreate === 'patch') {
+            await this.props.patchData({
+                AxiosInstance, id: this.state.id, data: JSON.stringify(data)
+            })
+        } else {
+            await this.props.createData({
+                AxiosInstance, data: JSON.stringify(data)
+            })
+        }
     }
 
     deleteData = async (e) => {
-        console.log('delete data');
         this.setState({
             isModalConfirmation: false
         })
@@ -106,10 +142,8 @@ export class Division extends Component {
     }
 
     onSuccessCallback = async () => {
-        console.log('callback');
         this.props.resetSuccess()
         await this.props.getData({ AxiosInstance, limit: 100, offset: 0 })
-        this.createTableData()
         this.setState({
             name: '',
             id: '',
@@ -117,9 +151,7 @@ export class Division extends Component {
         })
     }
 
-    renderAction = (data) => {
-        return <BaseAction onEdit={() => { this.handleEdit(data) }} onDelete={() => this.handleDelete(data['id'])} />
-    }
+
     render() {
         console.log('rendered');
         return (
@@ -139,22 +171,24 @@ export class Division extends Component {
                     <div className='px-4 py-4'>
                         <p className='text-gray-600 text-sm'>Data Division</p>
                         <div className='border-b border-gray-300 w-full mt-3 mb-3'></div>
-                        <BaseTable
+                        <TableClient
                             headers={this.state.tableHeader}
-                            pageLength={[5, 10, 25]}
+                            pageLength={[2, 5, 10]}
                             withIndex={true}
                             data={this.props.division.divisions}
                             pagination={true}
-                            onSorted={(data) => {this.props.sortData(data)}}
-                            column={[
-                                {
-                                    value: 'name',
-                                },
-                                {
-                                    value: null,
-                                    render: this.renderAction
-                                }
-                            ]} />
+                            onSorted={(data) => { this.props.sortData(data) }}
+                            column={this.state.tableColumn}
+                        // column={[
+                        //     {
+                        //         value: 'name',
+                        //     },
+                        //     {
+                        //         value: null,
+                        //         render: this.renderAction
+                        //     }
+                        // ]} 
+                        />
                     </div>
                 </div>
                 <Modal title='Add Item' isOpen={this.state.isModalOpen} onClose={() => { this.setState({ isModalOpen: false }) }}>

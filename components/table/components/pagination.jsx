@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 
 function Pagination({ data, totalPage, currentPage, perPage, onPageChange, onNextPage, onPrevoiusPage, onLastPage, onFirstPage }) {
 
     const [pages, setPages] = useState([])
     const [shownPages, setShownPages] = useState([])
-
 
     useEffect(() => {
         let indexOf = pages.indexOf(currentPage) + 1;
@@ -43,11 +43,11 @@ function Pagination({ data, totalPage, currentPage, perPage, onPageChange, onNex
         }
     }, [totalPage])
 
-
     return (
         <nav className='flex items-center justify-between pt-4'>
             {
                 data.length > 0 ? <span className='text-sm text-slate-600 '>Showing <span className='font-semibold'>{((currentPage - 1) * perPage) + 1}-{(((currentPage - 1) * perPage) + perPage) > data.length ? data.length : (((currentPage - 1) * perPage) + perPage)}</span> of <span className='font-semibold'>{data.length}</span>
+                <span>{` (${totalPage} pages)`}</span>
                 </span> : <span className='text-sm text-slate-600 '>Showing Empty Record</span>
             }
             <ul className='inline-flex items-center -space-x-px'>
@@ -95,6 +95,28 @@ function Pagination({ data, totalPage, currentPage, perPage, onPageChange, onNex
     )
 }
 
+Pagination.defaultProps = {
+    totalPage: 0, 
+    currentPage: 1, 
+    perPage: 0, 
+    onPageChange: function () {}, 
+    onNextPage: function () {}, 
+    onPrevoiusPage: function () {}, 
+    onLastPage: function () {},
+    onFirstPage: function () {},
+}
+Pagination.propTypes = {
+    data: PropTypes.array.isRequired,
+    totalPage: PropTypes.number, 
+    currentPage: PropTypes.number, 
+    perPage: PropTypes.number, 
+    onPageChange: PropTypes.func, 
+    onNextPage: PropTypes.func, 
+    onPrevoiusPage: PropTypes.func, 
+    onLastPage: PropTypes.func,
+    onFirstPage: PropTypes.func,
+}
+
 export default Pagination
 
 export const PageLength = ({ pageLength, onChange }) => {
@@ -109,9 +131,6 @@ export const PageLength = ({ pageLength, onChange }) => {
                         )
                     })
                 }
-
-                {/* <option className='bg-white text-slate-600 hover:bg-slate-200' value={10}>10</option>
-                <option className='bg-white text-slate-600 hover:bg-slate-200' value={25}>25</option> */}
             </select>
             <span className='text-sm text-slate-600 ms-2'>entries</span>
         </div>

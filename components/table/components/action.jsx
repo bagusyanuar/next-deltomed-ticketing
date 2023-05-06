@@ -1,6 +1,7 @@
-import React from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-function BaseAction({ onEdit, onDelete }) {
+function Action({ onEdit, onDelete }) {
     return (
         <div className='flex'>
             <a href='#' className='btn-edit mr-1 rounded-md text-white bg-orange-400 py-1 px-2 hover:bg-orange-500 hover:text-white transition-colors ease-in duration-200' onClick={(e) => { e.preventDefault(); onEdit(); }}>
@@ -14,7 +15,12 @@ function BaseAction({ onEdit, onDelete }) {
                 </span>
             </a>
         </div>
-    );
+    )
 }
 
-export default BaseAction;
+Action.propTypes = {
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
+}
+
+export default Action

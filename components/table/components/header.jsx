@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 function Header({ headers, withIndex, onSort }) {
     return (
@@ -32,4 +33,9 @@ function Header({ headers, withIndex, onSort }) {
     )
 }
 
+Header.propTypes = {
+    headers: PropTypes.array.isRequired,
+    withIndex: PropTypes.bool,
+    onSort: PropTypes.func,
+}
 export default Header
