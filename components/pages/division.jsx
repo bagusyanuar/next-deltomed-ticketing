@@ -45,51 +45,11 @@ export class Division extends Component {
                     sort: true
                 },
                 {
-                    value: 'Nama',
-                    className: '',
-                    sort: true
-                },
-                {
-                    value: 'Nama',
-                    className: '',
-                    sort: true
-                },
-                {
-                    value: 'Nama',
-                    className: '',
-                    sort: true
-                },
-                {
-                    value: 'Nama',
-                    className: '',
-                    sort: true
-                },
-                {
-                    value: 'Nama',
-                    className: '',
-                    sort: true
-                },
-                {
                     value: 'Action',
                     className: 'w-3 text-center',
                 },
             ],
             tableColumn: [
-                {
-                    value: 'name',
-                },
-                {
-                    value: 'name',
-                },
-                {
-                    value: 'name',
-                },
-                {
-                    value: 'name',
-                },
-                {
-                    value: 'name',
-                },
                 {
                     value: 'name',
                 },
@@ -179,15 +139,6 @@ export class Division extends Component {
                             pagination={true}
                             onSorted={(data) => { this.props.sortData(data) }}
                             column={this.state.tableColumn}
-                        // column={[
-                        //     {
-                        //         value: 'name',
-                        //     },
-                        //     {
-                        //         value: null,
-                        //         render: this.renderAction
-                        //     }
-                        // ]} 
                         />
                     </div>
                 </div>
@@ -212,40 +163,6 @@ export class Division extends Component {
         )
     }
 }
-
-const tableHeader = [
-    {
-        value: 'Nama',
-        className: '',
-        sort: true
-    },
-    {
-        value: 'Action',
-        className: 'w-3 text-center',
-        // sort: false
-    },
-]
-
-const column = () => [
-    {
-        value: 'name'
-    },
-    {
-        value: 'created_at'
-    }
-    // {
-    //     render: function (data) {
-    //         return data['name']
-    //     }
-    // },
-    // {
-    //     render: function (data) {
-    //         // console.log(data);
-    //         return (<BaseAction onEdit={() => { myClass.handleEdit(data) }} />)
-    //         // console.log(data);
-    //     }
-    // },
-];
 
 const mapStateToProps = (state) => ({
     division: state.reducer.division
