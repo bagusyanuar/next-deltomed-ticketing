@@ -18,6 +18,9 @@ const slice = createSlice({
     reducers: {
         sort: (state, { payload }) => {
             state.data = payload
+        },
+        reset: (state, { payload }) => {
+            console.log(payload);
         }
     },
     extraReducers: (builder) => {
@@ -54,6 +57,6 @@ const slice = createSlice({
     }
 })
 
-export const { sort } = slice.actions
+export const { sort, reset } = slice.actions
 
 export default slice.reducer;

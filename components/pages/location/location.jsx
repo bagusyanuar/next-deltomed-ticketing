@@ -5,10 +5,11 @@ import Textfield from '../../forms/textfield'
 import TableClient from '../../table/client/index'
 import TableAction from '../../table/components/action';
 import Modal from '../../modal/modal'
+import ModalAlert from '../../modal/alert'
 
 //redux import part
 import { connect } from 'react-redux'
-import { sort } from '../../../redux/features/location/slice'
+import { sort, reset } from '../../../redux/features/location/slice'
 import { getData, create } from '../../../redux/features/location/action'
 
 export class Location extends Component {
@@ -52,6 +53,7 @@ export class Location extends Component {
             ]
         })
         await this.props.getData({ token: this.props.token, limit: 100, offset: 0 })
+        this.props.reset(['success'])
     }
 
     handleSave = async () => {
@@ -64,6 +66,10 @@ export class Location extends Component {
                 token: this.props.token, data: JSON.stringify(data)
             })
         }
+    }
+
+    onSuccess = () => {
+        
     }
 
     render() {
@@ -108,6 +114,7 @@ export class Location extends Component {
                         </ButtonWithLoading>
                     </div>
                 </Modal>
+                <ModalAlert type='success' isOpen={(this.props.location.success && (this.props.location.type === 'CREATE' || this.props.location.type === 'DELETE'))} callback={() => {  }} message={`success`} />
             </div>
         )
     }
@@ -117,6 +124,6 @@ const mapStateToProps = (state) => ({
     location: state.reducer.location
 })
 
-const mapDispatchToProps = { getData, create, sort }
+const mapDispatchToProps = { getData, create, sort, reset }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Location)
