@@ -5,6 +5,7 @@ import TableAction from '../../table/components/action';
 import Modal from '../../modal/modal'
 import Textfield from '../../forms/textfield'
 import PasswordField from '../../forms/password'
+import SelectCustom from '../../forms/select'
 import ButtonWithLoading from '../../forms/button/with-loading'
 import Router from 'next/router'
 
@@ -23,11 +24,12 @@ class User extends Component {
             password: '',
             tableHeader: [],
             tableColumn: [],
+            roleOptions: [],
         }
     }
 
     renderAction = (data) => {
-        return <TableAction onEdit={() => {  }} onDelete={() => { }} />
+        return <TableAction onEdit={() => { }} onDelete={() => { }} />
     }
 
     async componentDidMount() {
@@ -74,6 +76,16 @@ class User extends Component {
                     value: null,
                     render: this.renderAction
                 }
+            ],
+            roleOptions: [
+                {
+                    value: 'administrator',
+                    text: 'Administrator'
+                },
+                {
+                    value: 'manager',
+                    text: 'Manager'
+                },
             ]
         })
         await this.props.getData({ token: this.props.token, limit: 100, offset: 0 })
@@ -103,14 +115,15 @@ class User extends Component {
                             withIndex={true}
                             data={this.props.user.data}
                             pagination={true}
-                            onSorted={(data) => { this.props.sort(data)  }}
+                            onSorted={(data) => { this.props.sort(data) }}
                             column={this.state.tableColumn}
                         />
                     </div>
                 </div>
                 <Modal title='Add User' size='lg' isOpen={this.state.modalOpen} onClose={() => { this.setState({ modalOpen: false }) }}>
                     <Textfield id='name' placeholder='name' className='mb-3' value={this.state.name} onChange={(e) => { this.setState({ [e.target.id]: e.target.value }) }} />
-                    <PasswordField id='password' placeholder='password' value={this.state.password} onChange={(e) => { this.setState({ [e.target.id]: e.target.value }) }} />
+                    <PasswordField id='password' placeholder='password' className='mb-3' value={this.state.password} onChange={(e) => { this.setState({ [e.target.id]: e.target.value }) }} />
+                    <SelectCustom id='roles' name='roles' placeholder='--pilih hak akses--' data={this.state.roleOptions} />
                     <div className='flex justify-end mt-3'>
                         <ButtonWithLoading onClick={() => { }} isLoading={true}>
                             <>
