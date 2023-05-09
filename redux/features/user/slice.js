@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getData, create, patch, destroy } from './action'
 
-
 const initialState = {
     type: 'FETCH',
     isLoading: false,
@@ -13,7 +12,7 @@ const initialState = {
 }
 
 const slice = createSlice({
-    name: 'location',
+    name: 'user',
     initialState,
     reducers: {
         sort: (state, { payload }) => {
@@ -89,4 +88,4 @@ const slice = createSlice({
 
 export const { sort, reset } = slice.actions
 
-export default slice.reducer;
+export default slice.reducer

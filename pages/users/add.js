@@ -1,12 +1,12 @@
 import Layouts from '../../components/layouts'
 import { withIronSessionSsr } from 'iron-session/next';
-import User from '../../components/pages/user/index'
+import AddPage from '../../components/pages/user/add'
 import { ironSessionOptions } from '../../lib/session'
 
-export default function UsersPage({ token }) {
+export default function UserAddPage({ token }) {
     return (
         <Layouts title="Users">
-            <User token={token} />
+            <AddPage token={token} />
         </Layouts>
     )
 }

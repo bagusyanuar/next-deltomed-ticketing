@@ -6,11 +6,13 @@ import TableClient from '../../table/client/index'
 import TableAction from '../../table/components/action';
 import Modal from '../../modal/modal'
 import ModalAlert from '../../modal/alert'
+import ModalConfirmation from '../../modal/confirmation'
+import BlockLoader from '../../loader/block'
 
 //redux import part
 import { connect } from 'react-redux'
 import { sort, reset } from '../../../redux/features/location/slice'
-import { getData, create } from '../../../redux/features/location/action'
+import { getData, create, patch, destroy } from '../../../redux/features/location/action'
 
 export class Location extends Component {
 
@@ -18,6 +20,8 @@ export class Location extends Component {
         super(props)
         this.state = {
             modalOpen: false,
+            modalConfirmation: false,
+            id: '',
             name: '',
             tableHeader: [],
             tableColumn: [],
@@ -26,7 +30,7 @@ export class Location extends Component {
     }
 
     renderAction = (data) => {
-        return <TableAction onEdit={() => {  }} onDelete={() => {}} />
+        return <TableAction onEdit={() => { this.handleEdit(data) }} onDelete={() => { this.handleDelete(data['id']) }} />
     }
 
     async componentDidMount() {
@@ -53,14 +57,24 @@ export class Location extends Component {
             ]
         })
         await this.props.getData({ token: this.props.token, limit: 100, offset: 0 })
-        this.props.reset(['success'])
+
+    }
+
+    handleEdit = (data) => {
+        this.setState({
+            modalOpen: true,
+            typeCreate: 'patch',
+            id: data['id'],
+            name: data['name']
+        })
     }
 
     handleSave = async () => {
+        const data = { name: this.state.name }
         if (this.state.typeCreate === 'patch') {
-            // await this.props.patchData({
-            //     AxiosInstance, id: this.state.id, data: JSON.stringify(data)
-            // })
+            await this.props.patch({
+                token: this.props.token, id: this.state.id, data: JSON.stringify(data)
+            })
         } else {
             await this.props.create({
                 token: this.props.token, data: JSON.stringify(data)
@@ -68,8 +82,25 @@ export class Location extends Component {
         }
     }
 
-    onSuccess = () => {
-        
+    handleDelete = (id) => {
+        this.setState({
+            modalConfirmation: true,
+            id: id,
+            typeCreate: 'delete'
+        })
+    }
+
+    delete = async () => {
+        this.setState({
+            modalConfirmation: false
+        })
+        await this.props.destroy({ token: this.props.token, id: this.state.id })
+    }
+
+    onSuccess = async () => {
+        this.props.reset([{ state: 'success', value: false }])
+        await this.props.getData({ token: this.props.token, limit: 100, offset: 0 })
+        this.setState({ name: '', id: '', modalOpen: this.state.typeCreate === 'create' ? true : false })
     }
 
     render() {
@@ -104,7 +135,7 @@ export class Location extends Component {
                 <Modal title='Add Location' isOpen={this.state.modalOpen} onClose={() => { this.setState({ modalOpen: false }) }}>
                     <Textfield id='name' placeholder='name' value={this.state.name} onChange={(e) => { this.setState({ [e.target.id]: e.target.value }) }} />
                     <div className='flex justify-end mt-3'>
-                        <ButtonWithLoading onClick={() => { this.handleSave }} isLoading={(this.props.location.isLoading && this.props.location.type === 'CREATE')}>
+                        <ButtonWithLoading onClick={() => { this.handleSave() }} isLoading={(this.props.location.isLoading && (this.props.location.type === 'CREATE' || this.props.location.type === 'PATCH'))}>
                             <>
                                 <span className="material-symbols-outlined me-1">
                                     check
@@ -114,7 +145,10 @@ export class Location extends Component {
                         </ButtonWithLoading>
                     </div>
                 </Modal>
-                <ModalAlert type='success' isOpen={(this.props.location.success && (this.props.location.type === 'CREATE' || this.props.location.type === 'DELETE'))} callback={() => {  }} message={`success`} />
+                <ModalConfirmation isOpen={this.state.modalConfirmation} message='Yakin ingin menghapus?' onRejected={() => { this.setState({ modalConfirmation: false }) }} onAccepted={() => { this.delete() }} />
+                <BlockLoader isOpen={(this.props.location.isLoading && this.props.location.type === 'DELETE')} message='sedang menghapus data....' />
+                <ModalAlert type='error' isOpen={(this.props.location.error && this.props.location.type !== 'FETCH')} callback={() => { this.props.reset([{ state: 'error', value: false }]) }} message={`internal server error`} />
+                <ModalAlert type='success' isOpen={(this.props.location.success && this.props.location.type !== 'FETCH')} callback={() => { this.onSuccess() }} message={`success`} />
             </div>
         )
     }
@@ -124,6 +158,6 @@ const mapStateToProps = (state) => ({
     location: state.reducer.location
 })
 
-const mapDispatchToProps = { getData, create, sort, reset }
+const mapDispatchToProps = { getData, create, patch, destroy, sort, reset }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Location)

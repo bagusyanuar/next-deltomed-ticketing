@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types';
 
-function Modal({ isOpen, onClose, title, children }) {
+function Modal({ isOpen, onClose, title, children, size }) {
     const [isShow, setShow] = useState(false)
+    const [modalSize, setModalSize] = useState('w-10/12 md:w-1/4')
 
     const handleClose = (e) => {
         onClose()
     }
+
 
     useEffect(() => {
         if (isOpen) {
@@ -16,11 +18,16 @@ function Modal({ isOpen, onClose, title, children }) {
         } else {
             setShow(false)
         }
-    }, [isOpen])
+        if (size === 'lg') {
+            setModalSize('w-10/12 lg:w-1/3 md:w-1/2')
+        }
+    }, [isOpen, size])
+
+
     return (
         <div className={`${isOpen ? '' : 'hidden'} absolute z-30 inset-0 bg-black bg-opacity-30 h-screen w-full flex justify-center items-start md:items-center pt-10 md:pt-0`}>
             {/* modal */}
-            <div className={`${isShow ? '' : 'opacity-0 -translate-y-full'} transform  relative w-10/12 md:w-1/4 bg-white rounded shadow-lg transition-opacity transition-transform ease-in-out duration-[700ms]`}>
+            <div className={`${isShow ? '' : 'opacity-0 -translate-y-full'} transform  relative ${modalSize} bg-white rounded shadow-lg transition-opacity transition-transform ease-in-out duration-[700ms]`}>
                 {/* header */}
                 <div className='px-4 py-3 border-b border-gray-200'>
                     <div className='flex text-slate-600 text-sm items-center justify-between'>

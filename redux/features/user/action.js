@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosInstance } from '../../../lib/api'
 
-const path = '/location'
+const path = '/user'
 
-export const getData = createAsyncThunk('location/getData', async ({ token, limit, offset }, { rejectWithValue }) => {
+export const getData = createAsyncThunk('user/getData', async ({ token, limit, offset }, { rejectWithValue }) => {
     try {
         AxiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`
         const response = await AxiosInstance.get(`${path}?limit=${limit}&offset=${offset}`);
+        console.log(response.data);
         return response.data
     } catch (error) {
         return rejectWithValue({
@@ -17,7 +18,7 @@ export const getData = createAsyncThunk('location/getData', async ({ token, limi
     }
 })
 
-export const create = createAsyncThunk('location/create', async ({ token, data }, { rejectWithValue }) => {
+export const create = createAsyncThunk('user/create', async ({ token, data }, { rejectWithValue }) => {
     try {
         AxiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`
         const response = await AxiosInstance.post(path, data);
@@ -31,7 +32,7 @@ export const create = createAsyncThunk('location/create', async ({ token, data }
     }
 })
 
-export const patch = createAsyncThunk('location/patch', async ({ token, id, data }, { rejectWithValue }) => {
+export const patch = createAsyncThunk('user/patch', async ({ token, id, data }, { rejectWithValue }) => {
     try {
         AxiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`
         const response = await AxiosInstance.patch(`${path}/${id}`, data)
@@ -45,7 +46,7 @@ export const patch = createAsyncThunk('location/patch', async ({ token, id, data
     }
 })
 
-export const destroy = createAsyncThunk('location/destroy', async ({ token, id }, { rejectWithValue }) => {
+export const destroy = createAsyncThunk('user/destroy', async ({ token, id }, { rejectWithValue }) => {
     try {
         AxiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`
         const response = await AxiosInstance.delete(`${path}/${id}/delete`)
